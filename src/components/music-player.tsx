@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { loadUploadedAudio, saveUploadedAudio } from "@/lib/audio-store";
 
 const PRESETS = [
   { id: "miami-viceroy", name: "Miami Viceroy (GTA Vice City)", src: "/music/miami-viceroy.mp3" },
@@ -40,6 +41,14 @@ export default function MusicPlayer() {
     if (v !== null) setVolume(Math.min(1, Math.max(0, Number(v))));
     if (m !== null) setMuted(m === "1");
     if (t && (PRESETS.some((p) => p.id === t) || t === "custom")) setTrackId(t);
+    // Restore uploaded audio (IndexedDB)
+    loadUploadedAudio().then((saved) => {
+      if (saved) {
+        setCustomName(saved.name);
+        setCustomUrl(saved.url);
+        if (localStorage.getItem("gta6_track") === "custom") setTrackId("custom");
+      }
+    });
   }, []);
 
   // Sync volume / mute + persist
@@ -99,6 +108,7 @@ export default function MusicPlayer() {
     setCustomName(file.name.replace(/\.[^.]+$/, ""));
     setTrackId("custom");
     setOpen(false);
+    saveUploadedAudio(file.name.replace(/\.[^.]+$/, ""), file);
     window.setTimeout(() => {
       const a = audioRef.current;
       if (a) {

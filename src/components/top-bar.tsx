@@ -23,6 +23,8 @@ export default function TopBar() {
   useEffect(() => {
     const stored = (localStorage.getItem("gta6_vote") ?? "none") as "none" | "like" | "dislike";
     setVote(stored);
+    const savedEmail = localStorage.getItem("gta6_email");
+    if (savedEmail) setEmail(savedEmail);
     fetch("/api/stats", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setStats({ visits: d.visits ?? 0, likes: d.likes ?? 0, dislikes: d.dislikes ?? 0, subscribers: d.subscribers ?? 0, configured: d.configured }))
@@ -84,6 +86,7 @@ export default function TopBar() {
       const d = await res.json();
       setSubState(d?.ok ? "done" : "error");
       if (d?.ok) {
+        localStorage.setItem("gta6_email", email);
         setStats((s) => ({ ...s, subscribers: s.subscribers + 1 }));
         setTimeout(() => {
           setSubscribeOpen(false);

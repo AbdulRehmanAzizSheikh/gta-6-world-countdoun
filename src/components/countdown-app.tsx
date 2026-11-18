@@ -190,6 +190,24 @@ export default function CountdownApp() {
     return () => clearInterval(id);
   }, []);
 
+  // Restore last selected country / compare country
+  useEffect(() => {
+    const c = localStorage.getItem("gta6_country");
+    const cmp = localStorage.getItem("gta6_compare");
+    if (c && COUNTRIES.some((x) => x.code === c)) setSelectedCode(c);
+    if (cmp && COUNTRIES.some((x) => x.code === cmp)) setCompareCode(cmp);
+  }, []);
+
+  function changeCountry(code: string) {
+    setSelectedCode(code);
+    localStorage.setItem("gta6_country", code);
+  }
+
+  function changeCompare(code: string) {
+    setCompareCode(code);
+    localStorage.setItem("gta6_compare", code);
+  }
+
   const selected =
     COUNTRIES.find((c) => c.code === selectedCode) ??
     COUNTRIES.find((c) => c.code === DEFAULT_COUNTRY_CODE)!;
@@ -296,7 +314,7 @@ export default function CountdownApp() {
                   <select
                     id="country"
                     value={selectedCode}
-                    onChange={(e) => setSelectedCode(e.target.value)}
+                    onChange={(e) => changeCountry(e.target.value)}
                     className="w-full md:max-w-xl rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm sm:text-base text-white outline-none shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] backdrop-blur-xl focus:border-white/35 focus:bg-white/15"
                   >
                     {COUNTRIES.map((c) => (
@@ -445,7 +463,7 @@ export default function CountdownApp() {
               <select
                 id="compare-with"
                 value={compareCode}
-                onChange={(e) => setCompareCode(e.target.value)}
+                onChange={(e) => changeCompare(e.target.value)}
                 className="rounded-2xl border border-white/20 bg-white/10 px-3 py-2.5 text-sm text-white outline-none backdrop-blur-xl focus:bg-white/15"
               >
                 {COUNTRIES.map((c) => (
