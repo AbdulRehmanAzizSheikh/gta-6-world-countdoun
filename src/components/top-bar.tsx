@@ -191,14 +191,14 @@ export default function TopBar() {
   return (
     <>
       <div
-        className={`sticky top-3 sm:top-4 z-40 px-1 sm:px-2 transition-all duration-300 ease-out will-change-transform ${
+        className={`sticky top-4 sm:top-5 z-40 px-1 sm:px-2 transition-all duration-300 ease-out will-change-transform ${
           navHidden
             ? "-translate-y-[140%] opacity-0 pointer-events-none"
             : "translate-y-0 opacity-100"
         }`}
       >
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-1.5">
-          <div className="liquid-glass rounded-2xl px-2 sm:px-3 py-1.5 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 text-[10px] sm:text-xs">
+          <div className="liquid-glass rounded-2xl px-2 sm:px-3 py-1.5 flex flex-col gap-1.5 lg:flex-row lg:items-center lg:gap-2 text-[10px] sm:text-xs">
             {/* Line 1: brand + stats + votes + feedback + subscribe */}
             <div className="flex items-center flex-wrap gap-1 sm:gap-2 min-w-0">
               <Link href="/" className="flex items-center gap-1 sm:gap-1.5 font-semibold text-white shrink-0" aria-label="Home — GTA 6 World Countdown">
@@ -243,7 +243,7 @@ export default function TopBar() {
             </div>
 
             {/* Line 2 (mobile) / right side (desktop): music stretches to fill */}
-            <div className="flex items-center gap-1.5 w-full sm:flex-1 sm:min-w-0">
+            <div className="flex items-center gap-1.5 w-full lg:flex-1 lg:min-w-0">
               <MusicPlayer />
             </div>
           </div>
