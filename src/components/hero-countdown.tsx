@@ -38,7 +38,10 @@ function zonedWallTimeToUtcMs(
       Number(map.minute),
       Number(map.second),
     );
-    guess += asUtc - guess;
+    const want = Date.UTC(year, monthIndex, day, hour, minute, 0);
+    const diff = want - asUtc;
+    guess += diff;
+    if (diff === 0) break;
   }
   return guess;
 }
@@ -112,9 +115,10 @@ export default function HeroCountdown() {
         </p>
         <select
           aria-label="Hero countdown country"
+          title={selected.name}
           value={selectedCode}
           onChange={(e) => changeCountry(e.target.value)}
-          className="rounded-xl border border-white/20 bg-white/10 px-2 py-1.5 text-xs text-white outline-none backdrop-blur-xl focus:border-white/40"
+          className="min-w-0 max-w-[60%] sm:max-w-[12rem] truncate rounded-xl border border-white/20 bg-white/10 px-2 py-1.5 text-xs text-white outline-none backdrop-blur-xl focus:border-white/40"
         >
           {COUNTRIES.map((c) => (
             <option key={c.code} value={c.code} className="bg-[#111523] text-white">
