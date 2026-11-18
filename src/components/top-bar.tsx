@@ -19,6 +19,31 @@ export default function TopBar() {
   const [fbEmail, setFbEmail] = useState("");
   const [fbMessage, setFbMessage] = useState("");
   const [fbState, setFbState] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [navHidden, setNavHidden] = useState(false);
+
+  // Smart navbar: hides on scroll down, slides back on scroll up
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (y < 90) {
+          setNavHidden(false);
+        } else if (y > lastY + 6) {
+          setNavHidden(true);
+        } else if (y < lastY - 6) {
+          setNavHidden(false);
+        }
+        lastY = y;
+        ticking = false;
+      });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const stored = (localStorage.getItem("gta6_vote") ?? "none") as "none" | "like" | "dislike";
@@ -126,7 +151,11 @@ export default function TopBar() {
 
   return (
     <>
-      <div className="sticky top-0 z-40">
+      <div
+        className={`sticky top-0 z-40 transition-transform duration-300 ease-out will-change-transform ${
+          navHidden ? "-translate-y-full pointer-events-none" : "translate-y-0"
+        }`}
+      >
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-1.5">
           <div className="liquid-glass rounded-2xl px-2 sm:px-3 py-1.5 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 text-[10px] sm:text-xs">
             {/* Line 1: brand + stats + votes + feedback + subscribe */}
