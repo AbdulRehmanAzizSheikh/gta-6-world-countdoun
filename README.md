@@ -3,7 +3,7 @@
 Fan-made **GTA 6 (Grand Theft Auto VI)** world launch countdown site.
 Default country: **Pakistan 🇵🇰** — first-launch reference: **New Zealand 🇳🇿** (GTA VI unlocks at midnight **local time** on **19 November 2026**).
 
-Live: https://gta-6-countdown.supersoftware.agency
+Live: https://gta-vi-countdown.supersoftware.agency
 GitHub: https://github.com/AbdulRehmanAzizSheikh/gta-6-world-countdoun
 
 ## Stack
@@ -56,8 +56,8 @@ These are the off-code SEO steps. The code-side SEO (metadata, sitemap, robots.t
 
 ### 1. Deploy & domain
 - [ ] Vercel → import this repo → deploy
-- [ ] Vercel → **Settings → Domains** → add `gta-6-countdown.supersoftware.agency`
-- [ ] Point DNS for `gta-6-countdown.supersoftware.agency` to Vercel (usually a `CNAME` to `cname.vercel-dns.com`, or `A` record to `76.76.21.21` for apex)
+- [ ] Vercel → **Settings → Domains** → add `gta-vi-countdown.supersoftware.agency`
+- [ ] Point DNS for `gta-vi-countdown.supersoftware.agency` to Vercel (usually a `CNAME` to `cname.vercel-dns.com`, or `A` record to `76.76.21.21` for apex)
 - [ ] Ensure **HTTPS** is on and choose one canonical version (e.g. non-www) — redirect the other
 - [ ] Set `MONGODB_URI` and `ADMIN_PASSWORD` in Vercel env vars → redeploy
 
@@ -65,7 +65,7 @@ These are the off-code SEO steps. The code-side SEO (metadata, sitemap, robots.t
 - [ ] Go to https://search.google.com/search-console
 - [ ] **Add property** → choose "Domain" → enter `supersoftware.agency` (or "URL prefix" with the exact countdown URL)
 - [ ] Verify ownership (DNS TXT record at your domain provider, or HTML file upload)
-- [ ] **Sitemaps** → submit: `https://gta-6-countdown.supersoftware.agency/sitemap.xml`
+- [ ] **Sitemaps** → submit: `https://gta-vi-countdown.supersoftware.agency/sitemap.xml`
 - [ ] **URL Inspection** → paste the homepage URL → **Request indexing**
 - [ ] Check **Pages** report after a few days — confirm it gets indexed
 

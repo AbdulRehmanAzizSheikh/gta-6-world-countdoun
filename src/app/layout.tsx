@@ -14,7 +14,7 @@ const body = Manrope({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gta-6-countdown.supersoftware.agency"),
+  metadataBase: new URL("https://gta-vi-countdown.supersoftware.agency"),
   title: {
     default: "GTA 6 World Countdown — GTA VI Release Time by Country",
     template: "%s | GTA 6 World Countdown",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     title: "GTA 6 World Countdown — GTA VI Release Time by Country",
     description:
       "Track GTA 6 launch time worldwide by country. Default view: Pakistan, first-launch reference: New Zealand. Live local countdown for every timezone.",
-    url: "https://gta-6-countdown.supersoftware.agency",
+    url: "https://gta-vi-countdown.supersoftware.agency",
     siteName: "GTA 6 World Countdown",
     type: "website",
     locale: "en_US",

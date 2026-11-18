@@ -132,7 +132,7 @@ export default async function OpengraphImage() {
               color: "rgba(255,255,255,0.78)",
             }}
           >
-            gta-6-countdown.supersoftware.agency
+            gta-vi-countdown.supersoftware.agency
           </div>
         </div>
       </div>

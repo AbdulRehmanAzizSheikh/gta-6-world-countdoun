@@ -16,35 +16,35 @@ export default function Page() {
             "@graph": [
               {
                 "@type": "WebSite",
-                "@id": "https://gta-6-countdown.supersoftware.agency/#website",
+                "@id": "https://gta-vi-countdown.supersoftware.agency/#website",
                 name: "GTA 6 World Countdown",
-                url: "https://gta-6-countdown.supersoftware.agency",
+                url: "https://gta-vi-countdown.supersoftware.agency",
                 description:
                   "Track GTA 6 (Grand Theft Auto VI) launch time worldwide by country — live countdown for Pakistan, New Zealand, India and every timezone.",
                 inLanguage: "en",
-                publisher: { "@id": "https://gta-6-countdown.supersoftware.agency/#org" },
+                publisher: { "@id": "https://gta-vi-countdown.supersoftware.agency/#org" },
               },
               {
                 "@type": "Organization",
-                "@id": "https://gta-6-countdown.supersoftware.agency/#org",
+                "@id": "https://gta-vi-countdown.supersoftware.agency/#org",
                 name: "SuperSoftware Agency",
                 url: "https://supersoftware.agency",
                 logo: {
                   "@type": "ImageObject",
-                  url: "https://gta-6-countdown.supersoftware.agency/brand/icon.png",
+                  url: "https://gta-vi-countdown.supersoftware.agency/brand/icon.png",
                 },
                 email: "hello@supersoftware.agency",
               },
               {
                 "@type": "WebApplication",
                 name: "GTA 6 World Countdown",
-                url: "https://gta-6-countdown.supersoftware.agency",
+                url: "https://gta-vi-countdown.supersoftware.agency",
                 applicationCategory: "GameApplication",
                 operatingSystem: "Web",
                 description:
                   "Live GTA 6 (Grand Theft Auto VI) release countdown by country and timezone, with New Zealand first-launch reference.",
                 offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-                author: { "@id": "https://gta-6-countdown.supersoftware.agency/#org" },
+                author: { "@id": "https://gta-vi-countdown.supersoftware.agency/#org" },
               },
             ],
           }),
@@ -141,7 +141,7 @@ export default function Page() {
                 github.com/AbdulRehmanAzizSheikh ↗
               </a>
               <p className="mt-3 text-xs sm:text-sm text-white/80 leading-relaxed border-t border-white/10 pt-3">
-                GTA VI fan countdown for <span className="text-white/95">gta-6-countdown.supersoftware.agency</span>.
+                GTA VI fan countdown for <span className="text-white/95">gta-vi-countdown.supersoftware.agency</span>.
                 Not affiliated with Rockstar Games. Timing basis: Rockstar&apos;s announced console release on 19
                 November 2026 at midnight local time. Images shown are official Rockstar Games GTA VI artwork/media.
               </p>

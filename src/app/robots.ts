@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       { userAgent: "*", allow: "/", disallow: ["/admin", "/api/"] },
     ],
-    sitemap: "https://gta-6-countdown.supersoftware.agency/sitemap.xml",
-    host: "https://gta-6-countdown.supersoftware.agency",
+    sitemap: "https://gta-vi-countdown.supersoftware.agency/sitemap.xml",
+    host: "https://gta-vi-countdown.supersoftware.agency",
   };
 }
