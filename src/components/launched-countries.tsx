@@ -68,14 +68,14 @@ export default function LaunchedCountries() {
 
   if (now === null) {
     return (
-      <section className="liquid-glass-soft rounded-[1.75rem] p-4 sm:p-5 mt-6 sm:mt-8">
+      <section className="liquid-glass-soft rounded-[1.75rem] p-4 sm:p-5 mt-6 sm:mt-8 mb-6 sm:mb-8">
         <p className="text-sm text-white/70">Loading launched countries…</p>
       </section>
     );
   }
 
   return (
-    <section className="liquid-glass-soft rounded-[1.75rem] p-4 sm:p-5 mt-6 sm:mt-8">
+    <section className="liquid-glass-soft rounded-[1.75rem] p-4 sm:p-5 mt-6 sm:mt-8 mb-6 sm:mb-8">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
