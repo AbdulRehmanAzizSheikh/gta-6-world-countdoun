@@ -68,16 +68,16 @@ export default function LaunchedCountries() {
 
   if (now === null) {
     return (
-      <section className="liquid-glass-soft rounded-[1.75rem] p-4 sm:p-5 mt-6 sm:mt-8">
+      <section className="liquid-glass-soft rounded-[1.75rem] p-5 sm:p-6 mt-6 sm:mt-8">
         <p className="text-sm text-white/70">Loading launched countries…</p>
       </section>
     );
   }
 
   return (
-    <section className="liquid-glass-soft rounded-[1.75rem] p-4 sm:p-5 mt-6 sm:mt-8">
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+    <section className="liquid-glass-soft rounded-[1.75rem] p-5 sm:p-6 lg:p-7 mt-6 sm:mt-8">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4 sm:mb-5">
+        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
           Launched Countries
         </h2>
@@ -86,18 +86,18 @@ export default function LaunchedCountries() {
         </span>
       </div>
       {launched.length === 0 ? (
-        <p className="text-sm text-white/80">
+        <p className="text-sm sm:text-base text-white/80">
           No country has launched yet. New Zealand will be first at midnight local (19 Nov 2026).
         </p>
       ) : (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2.5 sm:gap-3">
           {launched.map((c) => (
             <span
               key={c.code}
-              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/25 bg-emerald-500/10 px-3 py-1.5 text-xs sm:text-sm text-white/95"
+              className="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-500/10 px-3.5 sm:px-4 py-2 text-xs sm:text-sm text-white/95"
               title={`Launched at local midnight in ${c.name}`}
             >
-              <span className="text-base leading-none">{c.flag}</span>
+              <span className="text-base sm:text-lg leading-none">{c.flag}</span>
               <span className="font-medium">{c.name}</span>
             </span>
           ))}
