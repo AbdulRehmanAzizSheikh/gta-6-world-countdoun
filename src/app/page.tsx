@@ -1,6 +1,7 @@
 import CountdownApp from "@/components/countdown-app";
 import BackgroundSlideshow from "@/components/background-slideshow";
 import TopBar from "@/components/top-bar";
+import HeroCountdown from "@/components/hero-countdown";
 
 
 
@@ -164,6 +165,10 @@ export default function Page() {
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div className="relative px-4 pb-4 sm:px-6 sm:pb-6 lg:absolute lg:bottom-6 lg:right-6 lg:p-0 lg:w-[21rem]">
+              <HeroCountdown />
             </div>
           </div>
         </header>
