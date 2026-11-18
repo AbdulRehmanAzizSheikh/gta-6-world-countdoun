@@ -172,7 +172,7 @@ export default function MusicPlayer() {
           if (v > 0 && muted) setMuted(false);
         }}
         aria-label="Volume"
-        className="w-16 sm:w-32 lg:w-56 h-1 accent-fuchsia-500 cursor-pointer"
+        className="w-12 sm:w-32 lg:w-56 h-1 accent-fuchsia-500 cursor-pointer"
       />
 
       {/* Mute / unmute */}
@@ -189,7 +189,7 @@ export default function MusicPlayer() {
         <div
           role="listbox"
           aria-label="Choose track"
-          className="absolute left-0 top-full mt-2 z-50 w-60 sm:w-72 rounded-2xl border border-white/15 bg-[#0f1320]/95 backdrop-blur-xl shadow-2xl shadow-black/40 p-1.5"
+          className="absolute left-0 top-full mt-2 z-50 w-60 sm:w-72 max-w-[92vw] rounded-2xl border border-white/15 bg-[#0f1320]/95 backdrop-blur-xl shadow-2xl shadow-black/40 p-1.5"
         >
           <p className="px-2.5 pt-1.5 pb-1 text-[10px] uppercase tracking-[0.2em] text-fuchsia-200/80">
             GTA-style synthwave

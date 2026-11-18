@@ -111,3 +111,9 @@ body::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
+
+/* Prevent any horizontal overflow on small screens */
+html,
+body {
+  overflow-x: hidden;
+}

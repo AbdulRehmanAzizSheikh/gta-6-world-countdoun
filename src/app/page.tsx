@@ -167,7 +167,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="relative px-4 pb-4 sm:px-6 sm:pb-6 lg:absolute lg:bottom-6 lg:right-6 lg:p-0 lg:w-[21rem]">
+            <div className="relative px-4 pb-4 sm:px-6 sm:pb-6 xl:absolute xl:bottom-6 xl:right-6 xl:p-0 xl:w-[20.5rem]">
               <HeroCountdown />
             </div>
           </div>

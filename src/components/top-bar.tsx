@@ -161,7 +161,7 @@ export default function TopBar() {
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-1.5">
           <div className="liquid-glass rounded-2xl px-2 sm:px-3 py-1.5 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 text-[10px] sm:text-xs">
             {/* Line 1: brand + stats + votes + feedback + subscribe */}
-            <div className="flex items-center gap-1 sm:gap-2 min-w-0">
+            <div className="flex items-center flex-wrap gap-1 sm:gap-2 min-w-0">
               <Link href="/" className="flex items-center gap-1 sm:gap-1.5 font-semibold text-white shrink-0" aria-label="Home — GTA 6 World Countdown">
                 <img src="/brand/icon.png" alt="SuperSoftware Agency" className="h-6 w-6 sm:h-7 sm:w-7 rounded-lg" />
               </Link>
