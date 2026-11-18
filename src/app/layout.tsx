@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Manrope } from "next/font/google";
 import "./globals.css";
+import LoadingScreen from "@/components/loading-screen";
 
 const display = Bebas_Neue({
   variable: "--font-display",
@@ -97,7 +98,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <LoadingScreen />
+        {children}
+      </body>
     </html>
   );
 }
