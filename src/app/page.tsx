@@ -104,13 +104,13 @@ export default function Page() {
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-3 lg:min-w-[460px]">
+            <div className="flex flex-col gap-3 lg:min-w-[300px]">
               <div className="liquid-glass rounded-2xl p-4 sm:p-5">
                 <p className="text-[11px] uppercase tracking-[0.22em] text-white/80">Developer Contact</p>
                 <p className="mt-2 text-base font-semibold text-white">Abdul Rehman</p>
                 <a
                   href="mailto:mail@abdulrehman.sbs"
-                  className="mt-2 inline-block text-sm sm:text-base text-cyan-100 hover:text-white transition-colors [word-break:break-word]"
+                  className="mt-2 inline-block text-sm text-cyan-100 hover:text-white transition-colors break-all"
                 >
                   mail@abdulrehman.sbs
                 </a>
@@ -120,7 +120,7 @@ export default function Page() {
                 <p className="mt-2 text-base font-semibold text-white">SuperSoftware Agency</p>
                 <a
                   href="mailto:hello@supersoftware.agency"
-                  className="mt-2 inline-block text-sm sm:text-base text-pink-100 hover:text-white transition-colors [word-break:break-word]"
+                  className="mt-2 inline-block text-sm text-pink-100 hover:text-white transition-colors break-all"
                 >
                   hello@supersoftware.agency
                 </a>
