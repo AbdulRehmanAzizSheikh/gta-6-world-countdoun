@@ -2,6 +2,7 @@ import CountdownApp from "@/components/countdown-app";
 import BackgroundSlideshow from "@/components/background-slideshow";
 import TopBar from "@/components/top-bar";
 import HeroCountdown from "@/components/hero-countdown";
+import MusicPlayer from "@/components/music-player";
 
 
 
@@ -106,6 +107,10 @@ export default function Page() {
         }}
       />
       <TopBar />
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-2 sm:pt-3">
+        <MusicPlayer />
+      </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10">
         <header className="mb-6 sm:mb-8">

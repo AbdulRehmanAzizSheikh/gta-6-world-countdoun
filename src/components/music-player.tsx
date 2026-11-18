@@ -99,6 +99,8 @@ export default function MusicPlayer() {
     }
     a.src = src;
     a.loop = false;
+    a.volume = volume;
+    a.muted = muted;
     if (playing) {
       a.play().catch(() => setPlaying(false));
     }
@@ -236,7 +238,14 @@ export default function MusicPlayer() {
           </label>
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
-              onClick={() => setMuted((m) => !m)}
+              onClick={() => {
+                const a = audioRef.current;
+                setMuted((m) => {
+                  const next = !m;
+                  if (a) a.muted = next;
+                  return next;
+                });
+              }}
               aria-label={muted ? "Unmute" : "Mute"}
               className="h-9 w-9 rounded-full border border-white/15 bg-white/10 flex items-center justify-center text-sm text-white/90 hover:bg-white/20 transition-colors shrink-0"
               title={muted ? "Unmute" : "Mute"}
@@ -249,9 +258,14 @@ export default function MusicPlayer() {
               max={100}
               value={Math.round(volume * 100)}
               onChange={(e) => {
+                const a = audioRef.current;
                 const v = Number(e.target.value) / 100;
                 setVolume(v);
                 if (v > 0 && muted) setMuted(false);
+                if (a) {
+                  a.volume = v;
+                  if (v > 0) a.muted = false;
+                }
               }}
               aria-label="Volume"
               className="w-24 sm:w-32 md:w-40 h-1.5 accent-fuchsia-500 cursor-pointer"

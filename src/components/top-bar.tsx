@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import MusicPlayer from "@/components/music-player";
 
 type Stats = { visits: number; likes: number; dislikes: number; subscribers: number; configured?: boolean };
 
@@ -198,54 +197,46 @@ export default function TopBar() {
         }`}
       >
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-1.5">
-          <div className="liquid-glass rounded-2xl px-2 sm:px-3 py-1.5 flex flex-col gap-1.5 text-[10px] sm:text-xs">
-            {/* Line 1: brand + stats + votes + feedback + subscribe */}
-            <div className="flex items-center flex-wrap gap-1 sm:gap-2 min-w-0">
-              <Link href="/" className="flex items-center gap-1 sm:gap-1.5 font-semibold text-white shrink-0" aria-label="Home — GTA 6 World Countdown">
-                <img src="/brand/icon.png" alt="SuperSoftware Agency" className="h-6 w-6 sm:h-7 sm:w-7 rounded-lg" />
-              </Link>
+          <div className="liquid-glass rounded-2xl px-2 sm:px-3 py-2 flex items-center flex-wrap gap-1 sm:gap-2 text-[10px] sm:text-xs">
+            <Link href="/" className="flex items-center gap-1 sm:gap-1.5 font-semibold text-white shrink-0" aria-label="Home — GTA 6 World Countdown">
+              <img src="/brand/icon.png" alt="SuperSoftware Agency" className="h-6 w-6 sm:h-7 sm:w-7 rounded-lg" />
+            </Link>
 
-              <span className="inline-flex items-center gap-1 rounded-full bg-white/10 border border-white/15 px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-[9px] sm:text-xs text-white/90 shrink-0" title="Total site visits">
-                👁️ <span className="font-semibold text-white">{stats.visits.toLocaleString()}</span>
-              </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/10 border border-white/15 px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-[9px] sm:text-xs text-white/90 shrink-0" title="Total site visits">
+              👁️ <span className="font-semibold text-white">{stats.visits.toLocaleString()}</span>
+            </span>
 
-              <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-                <button
-                  onClick={() => castVote("like")}
-                  aria-pressed={vote === "like"}
-                  className={`inline-flex items-center gap-1 rounded-full border px-1.5 sm:px-2.5 py-0.5 sm:py-1 transition-all ${vote === "like" ? "bg-emerald-400/25 border-emerald-300/40 text-emerald-100" : "bg-white/10 border-white/15 text-white/90 hover:bg-white/15"}`}
-                >
-                  👍 <span className="font-semibold">{stats.likes.toLocaleString()}</span>
-                </button>
-                <button
-                  onClick={() => castVote("dislike")}
-                  aria-pressed={vote === "dislike"}
-                  className={`inline-flex items-center gap-1 rounded-full border px-1.5 sm:px-2.5 py-0.5 sm:py-1 transition-all ${vote === "dislike" ? "bg-rose-400/25 border-rose-300/40 text-rose-100" : "bg-white/10 border-white/15 text-white/90 hover:bg-white/15"}`}
-                >
-                  👎 <span className="font-semibold">{stats.dislikes.toLocaleString()}</span>
-                </button>
-                <button
-                  onClick={() => setFeedbackOpen(true)}
-                  className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-white/90 hover:bg-white/15 transition-colors"
-                  aria-label="Send feedback"
-                >
-                  💬<span className="hidden sm:inline">Feedback</span>
-                </button>
-              </div>
-
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               <button
-                type="button"
-                onClick={() => setSubscribeOpen(true)}
-                className="ml-auto h-7 sm:h-8 rounded-full bg-gradient-to-r from-amber-400 via-fuchsia-500 to-violet-600 px-3 sm:px-4 text-[10px] sm:text-xs font-semibold text-white hover:opacity-90 transition-opacity whitespace-nowrap inline-flex items-center gap-1 shrink-0 justify-center"
+                onClick={() => castVote("like")}
+                aria-pressed={vote === "like"}
+                className={`inline-flex items-center gap-1 rounded-full border px-1.5 sm:px-2.5 py-0.5 sm:py-1 transition-all ${vote === "like" ? "bg-emerald-400/25 border-emerald-300/40 text-emerald-100" : "bg-white/10 border-white/15 text-white/90 hover:bg-white/15"}`}
               >
-                ✉️ <span>Subscribe</span>
+                👍 <span className="font-semibold">{stats.likes.toLocaleString()}</span>
+              </button>
+              <button
+                onClick={() => castVote("dislike")}
+                aria-pressed={vote === "dislike"}
+                className={`inline-flex items-center gap-1 rounded-full border px-1.5 sm:px-2.5 py-0.5 sm:py-1 transition-all ${vote === "dislike" ? "bg-rose-400/25 border-rose-300/40 text-rose-100" : "bg-white/10 border-white/15 text-white/90 hover:bg-white/15"}`}
+              >
+                👎 <span className="font-semibold">{stats.dislikes.toLocaleString()}</span>
+              </button>
+              <button
+                onClick={() => setFeedbackOpen(true)}
+                className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/10 px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-white/90 hover:bg-white/15 transition-colors"
+                aria-label="Send feedback"
+              >
+                💬<span className="hidden sm:inline">Feedback</span>
               </button>
             </div>
 
-            {/* Line 2 (mobile) / right side (desktop): music stretches to fill */}
-            <div className="flex items-center gap-1.5 w-full min-w-0">
-              <MusicPlayer />
-            </div>
+            <button
+              type="button"
+              onClick={() => setSubscribeOpen(true)}
+              className="ml-auto h-7 sm:h-8 rounded-full bg-gradient-to-r from-amber-400 via-fuchsia-500 to-violet-600 px-3 sm:px-4 text-[10px] sm:text-xs font-semibold text-white hover:opacity-90 transition-opacity whitespace-nowrap inline-flex items-center gap-1 shrink-0 justify-center"
+            >
+              ✉️ <span>Subscribe</span>
+            </button>
           </div>
         </div>
       </div>
