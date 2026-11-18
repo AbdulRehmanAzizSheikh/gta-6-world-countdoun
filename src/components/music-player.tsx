@@ -3,9 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { loadUploadedAudio, saveUploadedAudio } from "@/lib/audio-store";
 
-const PRESETS = [
-  { id: "miami-viceroy", name: "Miami Viceroy (GTA Vice City)", src: "/music/miami-viceroy.mp3" },
-];
+const TRACK_SLOTS = 12;
+
+const PRESETS = Array.from({ length: TRACK_SLOTS }, (_, i) => {
+  const n = i + 1;
+  return { id: String(n), name: `Track ${n}`, src: `/music/${n}.mp3` };
+});
 
 export default function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
