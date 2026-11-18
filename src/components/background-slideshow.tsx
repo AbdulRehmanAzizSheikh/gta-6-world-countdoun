@@ -33,8 +33,11 @@ export default function BackgroundSlideshow() {
           key={`desktop-${src}`}
           src={src}
           alt=""
-          className="hidden sm:block absolute inset-0 h-full w-full object-cover transition-opacity duration-[1600ms] ease-in-out"
-          style={{ opacity: i === index ? 1 : 0 }}
+          className="hidden sm:block absolute inset-0 h-full w-full object-cover scale-[1.06] transition-all duration-[1800ms] ease-out"
+          style={{
+            opacity: i === index ? 1 : 0,
+            transform: i === index ? "scale(1)" : "scale(1.08)",
+          }}
         />
       ))}
       {MOBILE_IMAGES.map((src, i) => (
@@ -42,8 +45,11 @@ export default function BackgroundSlideshow() {
           key={`mobile-${src}`}
           src={src}
           alt=""
-          className="sm:hidden absolute inset-0 h-full w-full object-cover object-[50%_20%] transition-opacity duration-[1600ms] ease-in-out"
-          style={{ opacity: i === index ? 1 : 0 }}
+          className="sm:hidden absolute inset-0 h-full w-full object-cover object-[50%_18%] scale-[1.06] transition-all duration-[1800ms] ease-out"
+          style={{
+            opacity: i === index ? 1 : 0,
+            transform: i === index ? "scale(1)" : "scale(1.08)",
+          }}
         />
       ))}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-[#0b1020]/66 to-[#04050a]/92" />
