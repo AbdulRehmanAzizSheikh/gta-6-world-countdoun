@@ -176,6 +176,7 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
 
 export default function CountdownApp() {
   const [selectedCode, setSelectedCode] = useState(DEFAULT_COUNTRY_CODE);
+  const [compareCode, setCompareCode] = useState("IN");
   const [now, setNow] = useState(0);
 
   useEffect(() => {
@@ -189,6 +190,9 @@ export default function CountdownApp() {
     COUNTRIES.find((c) => c.code === DEFAULT_COUNTRY_CODE)!;
   const reference =
     COUNTRIES.find((c) => c.code === REFERENCE_COUNTRY_CODE) ?? COUNTRIES[0];
+  const compare =
+    COUNTRIES.find((c) => c.code === compareCode) ??
+    COUNTRIES.find((c) => c.code === "IN")!;
 
   const referenceLaunchMs = useMemo(
     () => getLaunchUtcMs(reference.timeZone),
@@ -197,6 +201,10 @@ export default function CountdownApp() {
   const selectedLaunchMs = useMemo(
     () => getLaunchUtcMs(selected.timeZone),
     [selected.timeZone],
+  );
+  const compareLaunchMs = useMemo(
+    () => getLaunchUtcMs(compare.timeZone),
+    [compare.timeZone],
   );
   const refDiff = now > 0 ? diffParts(referenceLaunchMs - now) : { days: 0, hours: 0, minutes: 0, seconds: 0, done: false };
 
@@ -219,6 +227,17 @@ export default function CountdownApp() {
     hour12: true,
     timeZoneName: "short",
   });
+  const compareLocalLaunchShort = formatInZone(compareLaunchMs, compare.timeZone, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+    timeZoneName: "short",
+  });
+  const compareDiffHours =
+    Math.round(((compareLaunchMs - selectedLaunchMs) / 3600000) * 10) / 10;
 
   const hoursDiff =
     Math.round(((selectedLaunchMs - referenceLaunchMs) / 3600000) * 10) / 10;
@@ -358,47 +377,66 @@ export default function CountdownApp() {
           </div>
 
           <div className="liquid-glass-soft rounded-2xl p-5">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-white/45">Quick compare</p>
+            <p className="text-[11px] uppercase tracking-[0.22em] text-white/45">Compare countries</p>
+            <p className="mt-1 text-sm text-white/70">
+              Compare your country with any other region (e.g. Pakistan vs India) and see both local launch times.
+            </p>
+
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <label className="text-[11px] uppercase tracking-[0.18em] text-white/55" htmlFor="compare-country">
+                Your country
+              </label>
+              <label className="text-[11px] uppercase tracking-[0.18em] text-white/55" htmlFor="compare-with">
+                Compare with
+              </label>
+              <select
+                id="compare-country"
+                value={selectedCode}
+                onChange={(e) => setSelectedCode(e.target.value)}
+                className="rounded-2xl border border-white/20 bg-white/10 px-3 py-2.5 text-sm text-white outline-none backdrop-blur-xl focus:bg-white/15"
+              >
+                {COUNTRIES.map((c) => (
+                  <option key={c.code} value={c.code} className="bg-[#111523] text-white">
+                    {c.flag} {c.name}
+                  </option>
+                ))}
+              </select>
+              <select
+                id="compare-with"
+                value={compareCode}
+                onChange={(e) => setCompareCode(e.target.value)}
+                className="rounded-2xl border border-white/20 bg-white/10 px-3 py-2.5 text-sm text-white outline-none backdrop-blur-xl focus:bg-white/15"
+              >
+                {COUNTRIES.map((c) => (
+                  <option key={c.code} value={c.code} className="bg-[#111523] text-white">
+                    {c.flag} {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="mt-3 space-y-3 text-sm">
               <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
-                <span className="text-white/70">🇵🇰 Pakistan (default)</span>
-                <span className="text-right font-medium text-white/95">
-                  {formatInZone(getLaunchUtcMs("Asia/Karachi"), "Asia/Karachi", {
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                  })}
-                </span>
+                <span className="text-white/75">{selected.flag} {selected.name}</span>
+                <span className="text-right font-medium text-white/95">{selectedLocalLaunchShort}</span>
               </div>
               <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
-                <span className="text-white/70">🇳🇿 New Zealand (first)</span>
-                <span className="text-right font-medium text-white/95">
-                  {formatInZone(referenceLaunchMs, reference.timeZone, {
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                  })}
-                </span>
+                <span className="text-white/75">{compare.flag} {compare.name}</span>
+                <span className="text-right font-medium text-white/95">{compareLocalLaunchShort}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/70">{selected.flag} {selected.name}</span>
-                <span className="text-right font-medium text-fuchsia-100">
-                  {formatInZone(selectedLaunchMs, selected.timeZone, {
-                    month: "short",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                  })}
+                <span className="text-white/75">Difference</span>
+                <span className="text-right font-semibold text-cyan-100">
+                  {compareDiffHours === 0
+                    ? "Same live moment"
+                    : compareDiffHours > 0
+                      ? `${compare.name}: ${compareDiffHours}h later`
+                      : `${compare.name}: ${Math.abs(compareDiffHours)}h earlier`}
                 </span>
               </div>
             </div>
             <p className="mt-4 text-xs text-white/45 leading-relaxed">
-              Each region shown at its own local midnight unlock (19 Nov 2026). Platform/store timing can vary slightly.
+              Each region is shown at its own local midnight unlock (19 Nov 2026). Platform/store timing can vary slightly.
             </p>
           </div>
         </aside>
