@@ -98,3 +98,16 @@ a {
 .image-fade-bottom {
   mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
 }
+
+/* Hide scrollbars globally — page still scrolls, cleaner full-screen look */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
