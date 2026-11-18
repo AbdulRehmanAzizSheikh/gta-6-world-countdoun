@@ -212,7 +212,7 @@ export default function MusicPlayer() {
             Music
           </p>
           {presets.length === 0 && !customUrl && (
-            <p className="px-2.5 py-2 text-xs text-white/60">No tracks in /music (add 1.mp3, 2.aac, …)</p>
+            <p className="px-2.5 py-2 text-xs text-white/60">No tracks in /music</p>
           )}
           {presets.map((p) => (
             <button
