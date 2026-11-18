@@ -34,6 +34,12 @@ export default function MusicPlayer() {
   const src = isCustom ? customUrl! : (activePreset?.src ?? "");
   const hasSource = !!src;
 
+  // Keep latest values for Media Session handlers (avoid stale closures)
+  const stateRef = useRef({ playing, currentTime, duration, presets, trackId, src });
+  useEffect(() => {
+    stateRef.current = { playing, currentTime, duration, presets, trackId, src };
+  }, [playing, currentTime, duration, presets, trackId, src]);
+
   // Load dynamic track list (all audio files in /public/music)
   useEffect(() => {
     fetch("/api/music", { cache: "no-store" })
@@ -215,6 +221,98 @@ export default function MusicPlayer() {
     }, 0);
     e.target.value = "";
   }
+
+  // Sync with device/OS media controls (keyboard play/pause/next/prev, media overlay)
+  useEffect(() => {
+    if (typeof navigator === "undefined" || !("mediaSession" in navigator)) return;
+    const ms = navigator.mediaSession;
+    try {
+      if (hasSource) {
+        ms.metadata = new MediaMetadata({
+          title: currentName,
+          artist: "GTA 6 World Countdown",
+          album: "Music",
+          artwork: [
+            { src: "/brand/icon.png", sizes: "192x192", type: "image/png" },
+            { src: "/brand/icon.png", sizes: "512x512", type: "image/png" },
+          ],
+        });
+      } else {
+        ms.metadata = null;
+      }
+    } catch {}
+
+    const safePlay = async () => {
+      const a = audioRef.current;
+      if (!a || !stateRef.current.src) return;
+      try {
+        a.volume = volume;
+        a.muted = muted;
+        await a.play();
+        setPlaying(true);
+      } catch {
+        setPlaying(false);
+      }
+    };
+    const safePause = () => {
+      const a = audioRef.current;
+      if (!a) return;
+      a.pause();
+      setPlaying(false);
+    };
+
+    const actions: Array<[MediaSessionAction, MediaSessionActionHandler | null]> = [
+      ["play", () => { void safePlay(); }],
+      ["pause", () => { safePause(); }],
+      ["previoustrack", () => { prevTrack(); }],
+      ["nexttrack", () => { nextTrack(); }],
+      ["seekbackward", (details) => { skip(-(details?.seekOffset ?? 5)); }],
+      ["seekforward", (details) => { skip(details?.seekOffset ?? 5); }],
+      ["seekto", (details) => { if (details && typeof details.seekTime === "number") seekTo(details.seekTime); }],
+      ["stop", () => { safePause(); seekTo(0); }],
+    ];
+
+    for (const [action, handler] of actions) {
+      try {
+        ms.setActionHandler(action, handler);
+      } catch {}
+    }
+
+    return () => {
+      for (const [action] of actions) {
+        try {
+          ms.setActionHandler(action, null);
+        } catch {}
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasSource, currentName, presets, trackId, volume, muted]);
+
+  useEffect(() => {
+    if (typeof navigator === "undefined" || !("mediaSession" in navigator)) return;
+    const ms = navigator.mediaSession;
+    try {
+      ms.playbackState = hasSource ? (playing ? "playing" : "paused") : "none";
+    } catch {}
+  }, [playing, hasSource]);
+
+  useEffect(() => {
+    if (typeof navigator === "undefined" || !("mediaSession" in navigator)) return;
+    const ms = navigator.mediaSession;
+    if (!("setPositionState" in ms)) return;
+    const d = duration;
+    if (!hasSource || !Number.isFinite(d) || d <= 0) {
+      try { ms.setPositionState(); } catch {}
+      return;
+    }
+    try {
+      ms.setPositionState({
+        duration: d,
+        playbackRate: 1,
+        position: Math.min(Math.max(0, currentTime), d),
+      });
+    } catch {}
+  }, [currentTime, duration, hasSource, playing]);
 
   return (
     <div
