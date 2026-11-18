@@ -110,8 +110,8 @@ export default function Page() {
         <header className="mb-6 sm:mb-8">
           <div className="liquid-glass rounded-[2rem] overflow-hidden relative border-white/20 min-h-[420px] sm:min-h-[460px] lg:min-h-[500px]">
             <img
-              src="/gta6/cover-art.jpg"
-              alt="Official GTA VI cover artwork with Jason and Lucia"
+              src="/gta6/rooftop.jpg"
+              alt="Official GTA VI key artwork — Jason and Lucia on a rooftop in Vice City"
               className="absolute inset-0 h-full w-full object-cover object-[70%_25%] sm:object-[75%_20%] lg:object-[80%_15%]"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#04050a]/95 via-[#04050a]/80 sm:via-[#04050a]/60 to-[#04050a]/10 sm:to-transparent" />

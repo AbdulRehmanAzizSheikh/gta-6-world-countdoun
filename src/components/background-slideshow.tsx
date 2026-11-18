@@ -3,17 +3,21 @@
 import { useEffect, useState } from "react";
 
 const DESKTOP_IMAGES = [
-  "/gta6/jason-lucia-01-landscape.jpg",
+  "/gta6/rooftop.jpg",
+  "/gta6/robbery.jpg",
   "/gta6/lock-and-load.jpg",
   "/gta6/cover-art.jpg",
-  "/gta6/beach.jpg",
+  "/gta6/motel.jpg",
+  "/gta6/cal-hampton.jpg",
+  "/gta6/vice-city.jpg",
 ];
 
 const MOBILE_IMAGES = [
   "/gta6/cover-art.jpg",
-  "/gta6/lock-and-load.jpg",
-  "/gta6/beach.jpg",
-  "/gta6/jason-lucia-01-landscape.jpg",
+  "/gta6/rooftop.jpg",
+  "/gta6/robbery.jpg",
+  "/gta6/vice-city.jpg",
+  "/gta6/motel.jpg",
 ];
 
 export default function BackgroundSlideshow() {
