@@ -46,6 +46,60 @@ export default function Page() {
                 offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
                 author: { "@id": "https://gta-vi-countdown.supersoftware.agency/#org" },
               },
+              {
+                "@type": "FAQPage",
+                "@id": "https://gta-vi-countdown.supersoftware.agency/#faq",
+                mainEntity: [
+                  {
+                    "@type": "Question",
+                    name: "What is the GTA 6 release date?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "GTA 6 (Grand Theft Auto VI) releases on 19 November 2026 at midnight local time in every region, on PlayStation 5 and Xbox Series X|S, as confirmed by Rockstar Games.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "What time does GTA 6 launch in Pakistan?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "GTA 6 launches at midnight local time on 19 November 2026 — that is 12:00 AM PKT (GMT+5) on 19 November 2026 in Pakistan.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "What time does GTA 6 launch in India?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "GTA 6 launches at midnight local time on 19 November 2026 — 12:00 AM IST (GMT+5:30) in India.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "Which country gets GTA 6 first?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "New Zealand gets GTA 6 first. It hits midnight local (NZDT, GMT+13) before any other region — 11:00 AM GMT on 18 November 2026. This is the earliest official GTA 6 launch window in the world.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "What time does GTA 6 launch worldwide?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "GTA 6 uses a rolling midnight-local release: every country unlocks the game at 12:00 AM local time on 19 November 2026. New Zealand unlocks first (11:00 AM GMT, 18 Nov), then Australia, Asia, Europe, and the Americas last.",
+                    },
+                  },
+                  {
+                    "@type": "Question",
+                    name: "Is GTA 6 coming to PC?",
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: "Rockstar has not announced a PC release yet. Official platforms are PlayStation 5 and Xbox Series X|S with free next-gen streaming on Xbox Cloud.",
+                    },
+                  },
+                ],
+              },
             ],
           }),
         }}
@@ -115,6 +169,50 @@ export default function Page() {
         </header>
 
         <CountdownApp />
+
+        <section aria-labelledby="faq-heading" className="liquid-glass-soft rounded-[1.75rem] p-5 sm:p-7 mt-6 sm:mt-8">
+          <h2 id="faq-heading" className="text-xl sm:text-2xl font-bold text-white">
+            GTA 6 Countdown — Frequently Asked Questions
+          </h2>
+          <p className="mt-1 text-sm text-white/80">
+            Everything about the Grand Theft Auto VI release date, launch time and rollout worldwide.
+          </p>
+          <div className="mt-4 grid md:grid-cols-2 gap-3 text-sm">
+            {[
+              {
+                q: "What is the GTA 6 release date?",
+                a: "GTA 6 (Grand Theft Auto VI) releases on 19 November 2026 at midnight local time in every region, on PS5 and Xbox Series X|S, per Rockstar Games.",
+              },
+              {
+                q: "What time does GTA 6 launch in Pakistan?",
+                a: "Midnight local time — 12:00 AM PKT (GMT+5) on 19 November 2026. You can track the live countdown for Pakistan on this page.",
+              },
+              {
+                q: "What time does GTA 6 launch in India?",
+                a: "Midnight local time — 12:00 AM IST (GMT+5:30) on 19 November 2026.",
+              },
+              {
+                q: "Which country gets GTA 6 first?",
+                a: "New Zealand — it hits 12:00 AM NZDT (GMT+13) before anyone else: 11:00 AM GMT on 18 November 2026, the earliest official GTA 6 launch worldwide.",
+              },
+              {
+                q: "What is the worldwide GTA 6 launch schedule?",
+                a: "A rolling midnight-local unlock: New Zealand → Australia → Asia → Europe → Americas. Every country gets the game at 12:00 AM its own time on 19 November 2026.",
+              },
+              {
+                q: "Is GTA 6 out on PC yet?",
+                a: "Not announced. GTA 6 is officially on PS5 and Xbox Series X|S, with Xbox Cloud streaming also supported.",
+              },
+            ].map(({ q, a }) => (
+              <details key={q} className="rounded-2xl border border-white/10 bg-white/5 p-4 open:bg-white/10 transition-colors">
+                <summary className="cursor-pointer font-semibold text-white/95 marker:text-fuchsia-300">
+                  {q}
+                </summary>
+                <p className="mt-2 text-white/85 leading-relaxed">{a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
 
         <footer className="mt-6 sm:mt-8 liquid-glass-soft rounded-[1.75rem] p-5 sm:p-6">
           <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr] lg:items-stretch">
