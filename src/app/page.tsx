@@ -108,7 +108,7 @@ export default function Page() {
       />
       <TopBar />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-2 sm:pt-3">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6 mb-2">
         <MusicPlayer />
       </div>
 
