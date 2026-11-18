@@ -6,13 +6,6 @@
   --muted: rgba(247, 249, 255, 0.72);
 }
 
-@theme inline {
-  --color-background: var(--bg);
-  --color-foreground: var(--fg);
-  --font-sans: var(--font-body);
-  --font-display: var(--font-display);
-}
-
 * {
   box-sizing: border-box;
 }

@@ -109,7 +109,7 @@ function CountdownBlock({
 
 function CountryFacts({ country, now }: { country: CountryOption; now: number }) {
   const launchMs = useMemo(() => getLaunchUtcMs(country.timeZone), [country.timeZone]);
-  const d = diffParts(launchMs - now);
+  const d = now > 0 ? diffParts(launchMs - now) : { days: 0, hours: 0, minutes: 0, seconds: 0, done: false };
   const localLaunch = formatInZone(launchMs, country.timeZone, {
     weekday: "long",
     year: "numeric",
@@ -120,15 +120,18 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
     hour12: true,
     timeZoneName: "short",
   });
-  const localNow = formatInZone(now, country.timeZone, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
+  const localNow =
+    now > 0
+      ? formatInZone(now, country.timeZone, {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })
+      : "Loading…";
 
   return (
     <div className="space-y-4 sm:space-y-5">
@@ -173,9 +176,10 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
 
 export default function CountdownApp() {
   const [selectedCode, setSelectedCode] = useState(DEFAULT_COUNTRY_CODE);
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState(0);
 
   useEffect(() => {
+    setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, []);
@@ -194,7 +198,7 @@ export default function CountdownApp() {
     () => getLaunchUtcMs(selected.timeZone),
     [selected.timeZone],
   );
-  const refDiff = diffParts(referenceLaunchMs - now);
+  const refDiff = now > 0 ? diffParts(referenceLaunchMs - now) : { days: 0, hours: 0, minutes: 0, seconds: 0, done: false };
 
   const nzLocalLaunch = formatInZone(referenceLaunchMs, reference.timeZone, {
     weekday: "long",
@@ -312,7 +316,7 @@ export default function CountdownApp() {
               New Zealand is the first in the world to hit GTA VI launch at local midnight.
             </p>
 
-            <div className="mt-4 grid grid-cols-4 gap-2">
+            <div className="mt-4 grid grid-cols-2 min-[420px]:grid-cols-4 gap-2">
               {[
                 { l: "Days", v: String(refDiff.days) },
                 { l: "Hrs", v: pad(refDiff.hours) },
@@ -334,15 +338,17 @@ export default function CountdownApp() {
               <div className="border-t border-white/10 pt-3">
                 <div className="text-[11px] uppercase tracking-[0.18em] text-white/55">Current time in NZ</div>
                 <div className="mt-1 font-mono text-cyan-100">
-                  {formatInZone(now, reference.timeZone, {
-                    weekday: "short",
-                    month: "short",
-                    day: "2-digit",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: true,
-                  })}
+                  {now > 0
+                    ? formatInZone(now, reference.timeZone, {
+                        weekday: "short",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: true,
+                      })
+                    : "Loading…"}
                 </div>
               </div>
             </div>

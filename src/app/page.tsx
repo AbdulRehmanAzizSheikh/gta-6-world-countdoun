@@ -110,7 +110,7 @@ export default function Page() {
                 <p className="mt-2 text-base font-semibold text-white">Abdul Rehman</p>
                 <a
                   href="mailto:mail@abdulrehman.sbs"
-                  className="mt-2 inline-block text-sm sm:text-base text-cyan-100 hover:text-white transition-colors break-all"
+                  className="mt-2 inline-block text-sm sm:text-base text-cyan-100 hover:text-white transition-colors [word-break:break-word]"
                 >
                   mail@abdulrehman.sbs
                 </a>
@@ -120,7 +120,7 @@ export default function Page() {
                 <p className="mt-2 text-base font-semibold text-white">SuperSoftware Agency</p>
                 <a
                   href="mailto:hello@supersoftware.agency"
-                  className="mt-2 inline-block text-sm sm:text-base text-pink-100 hover:text-white transition-colors break-all"
+                  className="mt-2 inline-block text-sm sm:text-base text-pink-100 hover:text-white transition-colors [word-break:break-word]"
                 >
                   hello@supersoftware.agency
                 </a>
