@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GTA 6 World Countdown 🌴
 
-## Getting Started
+Fan-made **GTA 6 (Grand Theft Auto VI)** world launch countdown site.
+Default country: **Pakistan 🇵🇰** — first-launch reference: **New Zealand 🇳🇿** (GTA VI unlocks at midnight **local time** on **19 November 2026**).
 
-First, run the development server:
+Live: https://gta-6-countdown.supersoftware.agency
+GitHub: https://github.com/AbdulRehmanAzizSheikh/gta-6-world-countdoun
+
+## Stack
+
+- Next.js 16 (App Router) + React 19 + TypeScript
+- Tailwind CSS 4 (liquid-glass theme)
+- MongoDB (`mongodb` driver) — database name: **`gta`** (visitor stats, likes/dislikes, subscribers, feedback)
+- Admin panel at **`/admin`** (password via `ADMIN_PASSWORD`, default `00112233`)
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then fill in real values
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment variables (`.env.local` — never commit this file)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+MONGODB_URI=mongodb+srv://<user>:<pass>@<host>/gta   # database: gta
+ADMIN_PASSWORD=00112233                              # /admin login
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> On Vercel, add the same two variables under **Settings → Environment Variables**, then redeploy.
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` — dev server
+- `npm run build` — production build
+- `npm start` — production server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## What the site does
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Live GTA 6 countdown **per selected country** (local midnight, 19 Nov 2026)
+- **New Zealand first-launch** countdown + NZ launch shown in your local time
+- Country comparison tool (default Pakistan vs India, any two countries)
+- **Like / Dislike** counters (top bar)
+- **Subscribe** with email (stored in MongoDB)
+- **Feedback** form (stored in MongoDB, shown in `/admin`)
+- **`/admin` panel** — stats: visits, likes, dislikes, subscribers & all feedback
+- Background music player (presets: Kevin MacLeod, CC BY 4.0) + **upload your own MP3 — stays on your device, never uploaded to the server**
+- Official Rockstar GTA VI artwork background slideshow (desktop & mobile)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔍 SEO — what YOU need to do (owner tasks)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+These are the off-code SEO steps. The code-side SEO (metadata, sitemap, robots.txt, JSON-LD, Open Graph image, canonical URL, fast loading) is already done.
+
+### 1. Deploy & domain
+- [ ] Vercel → import this repo → deploy
+- [ ] Vercel → **Settings → Domains** → add `gta-6-countdown.supersoftware.agency`
+- [ ] Point DNS for `gta-6-countdown.supersoftware.agency` to Vercel (usually a `CNAME` to `cname.vercel-dns.com`, or `A` record to `76.76.21.21` for apex)
+- [ ] Ensure **HTTPS** is on and choose one canonical version (e.g. non-www) — redirect the other
+- [ ] Set `MONGODB_URI` and `ADMIN_PASSWORD` in Vercel env vars → redeploy
+
+### 2. Google Search Console (most important)
+- [ ] Go to https://search.google.com/search-console
+- [ ] **Add property** → choose "Domain" → enter `supersoftware.agency` (or "URL prefix" with the exact countdown URL)
+- [ ] Verify ownership (DNS TXT record at your domain provider, or HTML file upload)
+- [ ] **Sitemaps** → submit: `https://gta-6-countdown.supersoftware.agency/sitemap.xml`
+- [ ] **URL Inspection** → paste the homepage URL → **Request indexing**
+- [ ] Check **Pages** report after a few days — confirm it gets indexed
+
+### 3. Bing Webmaster Tools
+- [ ] https://www.bing.com/webmasters → add the site → verify (import from Google Search Console is easiest)
+- [ ] Submit the same sitemap
+
+### 4. Analytics
+- [ ] Enable **Vercel Analytics** (Project → Analytics → Enable) — zero code needed, shows visitors
+- [ ] Or add **Google Analytics 4**: create property → get `G-XXXXXXX` ID → add `<Script>` with gtag in `src/app/layout.tsx` (ask me and I'll wire it up)
+
+### 5. Social & sharing
+- [ ] Share the link on X/Twitter, Reddit (r/GTA, r/GTA6), Discord servers, YouTube comments, Facebook — with a short text like "GTA 6 countdown for Pakistan"
+- [ ] Add the countdown link on **supersoftware.agency** (portfolio/projects page) — an internal backlink helps ranking
+- [ ] Add link in GitHub repo **About** section (done) and in your social bios
+
+### 6. Keep it fresh (helps rankings)
+- [ ] Keep the site updated — the countdown updates itself, but occasionally update the footer/hero copy
+- [ ] On launch day (19 Nov 2026), update the title/description to "GTA 6 is OUT — watch the world launch" — traffic will spike
+- [ ] Respond to feedback from the `/admin` panel — engagement signals help
+
+### 7. Monitor
+- [ ] Weekly: check Search Console "Performance" — impressions/clicks for queries like "GTA 6 Pakistan time", "GTA 6 India launch time"
+- [ ] Run Lighthouse in Chrome DevTools → keep Performance/SEO/Best Practices 90+
+
+---
+
+## Already done (code-side SEO)
+
+✅ Full metadata: title template, description, keywords, authors, canonical, robots, OG, Twitter cards
+✅ `sitemap.xml` (`src/app/sitemap.ts`) ✅ `robots.txt` (`src/app/robots.ts`) — `/admin` & `/api` disallowed
+✅ JSON-LD structured data (WebSite + Organization + WebApplication)
+✅ Open Graph image — auto-generated at `/opengraph-image` via `src/app/opengraph-image.tsx` (uses official Rockstar cover art)
+✅ Theme color, mobile viewport, `lang="en"`, favicon (`src/app/icon.png`)
+✅ `noindex` on `/admin`
+✅ Semantic headings, `alt` text on images, lazy-loaded images
+✅ Statically prerendered homepage (fast on Vercel edge)
+
+> Fan site — not affiliated with Rockstar Games. Uses official GTA VI artwork from Rockstar's media page for non-commercial fan purposes.

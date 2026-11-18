@@ -1,12 +1,56 @@
 import CountdownApp from "@/components/countdown-app";
 import BackgroundSlideshow from "@/components/background-slideshow";
+import TopBar from "@/components/top-bar";
 
-const viLogo = "/gta6/gta6-logo.png";
+
 
 export default function Page() {
   return (
     <main className="relative min-h-screen overflow-hidden text-white">
       <BackgroundSlideshow />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "WebSite",
+                "@id": "https://gta-6-countdown.supersoftware.agency/#website",
+                name: "GTA 6 World Countdown",
+                url: "https://gta-6-countdown.supersoftware.agency",
+                description:
+                  "Track GTA 6 (Grand Theft Auto VI) launch time worldwide by country — live countdown for Pakistan, New Zealand, India and every timezone.",
+                inLanguage: "en",
+                publisher: { "@id": "https://gta-6-countdown.supersoftware.agency/#org" },
+              },
+              {
+                "@type": "Organization",
+                "@id": "https://gta-6-countdown.supersoftware.agency/#org",
+                name: "SuperSoftware Agency",
+                url: "https://supersoftware.agency",
+                logo: {
+                  "@type": "ImageObject",
+                  url: "https://gta-6-countdown.supersoftware.agency/brand/icon.png",
+                },
+                email: "hello@supersoftware.agency",
+              },
+              {
+                "@type": "WebApplication",
+                name: "GTA 6 World Countdown",
+                url: "https://gta-6-countdown.supersoftware.agency",
+                applicationCategory: "GameApplication",
+                operatingSystem: "Web",
+                description:
+                  "Live GTA 6 (Grand Theft Auto VI) release countdown by country and timezone, with New Zealand first-launch reference.",
+                offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+                author: { "@id": "https://gta-6-countdown.supersoftware.agency/#org" },
+              },
+            ],
+          }),
+        }}
+      />
+      <TopBar />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10">
         <header className="mb-6 sm:mb-8">
@@ -39,7 +83,7 @@ export default function Page() {
 
                 <div className="mt-5 flex items-center gap-4 sm:gap-5">
                   <div className="liquid-glass-soft rounded-2xl p-2 sm:p-3 shrink-0">
-                    <img src={viLogo} alt="GTA VI logo" className="h-12 sm:h-16 w-auto" />
+                    <img src="/gta6/gta6-logo.png" alt="GTA VI logo" className="h-12 sm:h-16 w-auto" />
                   </div>
                   <div>
                     <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-white/90">

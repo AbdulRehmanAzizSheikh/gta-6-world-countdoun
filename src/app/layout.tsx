@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Manrope } from "next/font/google";
 import "./globals.css";
 
@@ -14,24 +14,63 @@ const body = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "GTA 6 World Countdown",
-  description:
-    "Worldwide GTA VI countdown with New Zealand first-launch reference and official local launch time for your selected country.",
   metadataBase: new URL("https://gta-6-countdown.supersoftware.agency"),
+  title: {
+    default: "GTA 6 World Countdown — GTA VI Release Time by Country",
+    template: "%s | GTA 6 World Countdown",
+  },
+  description:
+    "Track GTA 6 (Grand Theft Auto VI) launch time worldwide by country. See the official GTA VI release countdown for Pakistan, India, New Zealand and every timezone — New Zealand launches first. Live local launch clock, global compare and more.",
+  applicationName: "GTA 6 World Countdown",
+  keywords: [
+    "GTA 6",
+    "GTA VI",
+    "GTA 6 countdown",
+    "GTA 6 release date",
+    "GTA 6 launch time",
+    "GTA 6 Pakistan",
+    "GTA 6 India",
+    "GTA 6 New Zealand",
+    "GTA 6 release time by country",
+    "GTA 6 worldwide launch",
+    "Grand Theft Auto 6",
+    "GTA 6 release Pakistan time",
+  ],
+  authors: [{ name: "Abdul Rehman", url: "https://github.com/AbdulRehmanAzizSheikh" }],
+  creator: "Abdul Rehman — SuperSoftware Agency",
+  publisher: "SuperSoftware Agency",
+  category: "gaming",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
   openGraph: {
-    title: "GTA 6 World Countdown",
+    title: "GTA 6 World Countdown — GTA VI Release Time by Country",
     description:
-      "Track GTA VI launch worldwide. Default view: Pakistan, with New Zealand first-launch reference.",
+      "Track GTA 6 launch time worldwide by country. Default view: Pakistan, first-launch reference: New Zealand. Live local countdown for every timezone.",
     url: "https://gta-6-countdown.supersoftware.agency",
     siteName: "GTA 6 World Countdown",
     type: "website",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "GTA 6 World Countdown",
+    title: "GTA 6 World Countdown — GTA VI Release Time by Country",
     description:
-      "Track GTA VI launch worldwide. Default view: Pakistan, with New Zealand first-launch reference.",
+      "Track GTA 6 launch time worldwide by country. Default: Pakistan. First launch: New Zealand. Live local countdown for every timezone.",
+    creator: "@SuperSoftwareAgency",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#04050a",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
