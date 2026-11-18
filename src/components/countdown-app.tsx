@@ -87,17 +87,21 @@ function CountdownBlock({
   label,
   value,
   accent,
+  shimmer,
 }: {
   label: string;
   value: string;
   accent?: boolean;
+  shimmer?: boolean;
 }) {
   return (
     <div className="liquid-glass-soft rounded-[1.35rem] p-3 sm:p-4 text-center relative overflow-hidden">
       {accent && (
         <div className="absolute inset-x-4 top-2 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-70" />
       )}
-      <div className="font-[family-name:var(--font-display)] text-4xl sm:text-5xl lg:text-6xl leading-none tracking-wide text-white drop-shadow-[0_2px_8px_rgba(255,255,255,0.12)]">
+      <div
+        className={`font-[family-name:var(--font-display)] text-4xl sm:text-5xl lg:text-6xl leading-none tracking-wide text-white drop-shadow-[0_2px_8px_rgba(255,255,255,0.12)] ${shimmer ? "animate-pulse" : ""}`}
+      >
         {value}
       </div>
       <div className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.24em] text-white/90">
@@ -107,9 +111,10 @@ function CountdownBlock({
   );
 }
 
-function CountryFacts({ country, now }: { country: CountryOption; now: number }) {
+function CountryFacts({ country, now }: { country: CountryOption; now: number | null }) {
   const launchMs = useMemo(() => getLaunchUtcMs(country.timeZone), [country.timeZone]);
-  const d = now > 0 ? diffParts(launchMs - now) : { days: 0, hours: 0, minutes: 0, seconds: 0, done: false };
+  const loading = now === null;
+  const d = !loading ? diffParts(launchMs - now!) : { days: 0, hours: 0, minutes: 0, seconds: 0, done: false };
   const localLaunch = formatInZone(launchMs, country.timeZone, {
     weekday: "long",
     year: "numeric",
@@ -121,7 +126,7 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
     timeZoneName: "short",
   });
   const localNow =
-    now > 0
+    now !== null && now > 0
       ? formatInZone(now, country.timeZone, {
           weekday: "short",
           month: "short",
@@ -136,10 +141,10 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
   return (
     <div className="space-y-4 sm:space-y-5">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <CountdownBlock label="Days" value={String(d.days)} accent />
-        <CountdownBlock label="Hours" value={pad(d.hours)} />
-        <CountdownBlock label="Minutes" value={pad(d.minutes)} />
-        <CountdownBlock label="Seconds" value={pad(d.seconds)} />
+        <CountdownBlock label="Days" value={String(d.days)} accent shimmer={loading} />
+        <CountdownBlock label="Hours" value={pad(d.hours)} shimmer={loading} />
+        <CountdownBlock label="Minutes" value={pad(d.minutes)} shimmer={loading} />
+        <CountdownBlock label="Seconds" value={pad(d.seconds)} shimmer={loading} />
       </div>
 
       {d.done ? (
@@ -177,7 +182,7 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
 export default function CountdownApp() {
   const [selectedCode, setSelectedCode] = useState(DEFAULT_COUNTRY_CODE);
   const [compareCode, setCompareCode] = useState("IN");
-  const [now, setNow] = useState(0);
+  const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
     setNow(Date.now());
@@ -206,7 +211,7 @@ export default function CountdownApp() {
     () => getLaunchUtcMs(compare.timeZone),
     [compare.timeZone],
   );
-  const refDiff = now > 0 ? diffParts(referenceLaunchMs - now) : { days: 0, hours: 0, minutes: 0, seconds: 0, done: false };
+  const refDiff = now !== null && now > 0 ? diffParts(referenceLaunchMs - now) : { days: 0, hours: 0, minutes: 0, seconds: 0, done: false };
 
   const nzLocalLaunch = formatInZone(referenceLaunchMs, reference.timeZone, {
     weekday: "long",
@@ -229,7 +234,7 @@ export default function CountdownApp() {
     timeZoneName: "short",
   });
   const selectedNow =
-    now > 0
+    now !== null && now > 0
       ? formatInZone(now, selected.timeZone, {
           weekday: "short",
           month: "short",
@@ -392,7 +397,7 @@ export default function CountdownApp() {
                 <div>
                   <div className="text-[11px] uppercase tracking-[0.18em] text-white/80">Current time in NZ</div>
                   <div className="mt-1 font-mono text-cyan-100">
-                    {now > 0
+                    {now !== null && now > 0
                       ? formatInZone(now, reference.timeZone, {
                           weekday: "short",
                           month: "short",

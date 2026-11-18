@@ -54,7 +54,7 @@ export default function BackgroundSlideshow() {
       ))}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-[#0b1020]/66 to-[#04050a]/92" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(0,0,0,0.32),transparent_45%),radial-gradient(circle_at_bottom_right,rgba(0,0,0,0.42),transparent_40%)]" />
-      <div className="absolute bottom-4 left-4 flex gap-1.5 z-10">
+      <div className="absolute bottom-4 right-4 hidden sm:flex gap-1.5 z-10">
         {DESKTOP_IMAGES.map((_, i) => (
           <span
             key={i}
