@@ -50,37 +50,26 @@ function getLaunchUtcMs(timeZone: string) {
   return zonedWallTimeToUtcMs(LAUNCH.year, LAUNCH.month, LAUNCH.day, LAUNCH.hour, LAUNCH.minute, timeZone);
 }
 
-function formatRemaining(ms: number) {
-  const total = Math.max(0, Math.floor(ms / 1000));
-  const days = Math.floor(total / 86400);
-  const hours = Math.floor((total % 86400) / 3600);
-  const minutes = Math.floor((total % 3600) / 60);
-  const seconds = total % 60;
-  if (days > 0) return `${days}d ${hours}h ${minutes}m ${seconds}s`;
-  if (hours > 0) return `${hours}h ${minutes}m ${seconds}s`;
-  return `${minutes}m ${seconds}s`;
-}
-
 export default function LaunchedCountries() {
   const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
     setNow(Date.now());
-    const id = setInterval(() => setNow(Date.now()), 1000);
+    const id = setInterval(() => setNow(Date.now()), 30_000);
     return () => clearInterval(id);
   }, []);
 
-  const upcoming = useMemo(() => {
+  const launched = useMemo(() => {
     if (now === null) return [];
     return COUNTRIES.map((c) => ({ ...c, launchMs: getLaunchUtcMs(c.timeZone) }))
-      .filter((c) => c.launchMs > now)
-      .sort((a, b) => a.launchMs - b.launchMs || a.name.localeCompare(b.name));
+      .filter((c) => now >= c.launchMs)
+      .sort((a, b) => a.launchMs - b.launchMs);
   }, [now]);
 
   if (now === null) {
     return (
       <section className="liquid-glass-soft rounded-[1.75rem] p-4 sm:p-5 mt-6 sm:mt-8 mb-6 sm:mb-8">
-        <p className="text-sm text-white/70">Loading countries…</p>
+        <p className="text-sm text-white/70">Loading launched countries…</p>
       </section>
     );
   }
@@ -89,29 +78,28 @@ export default function LaunchedCountries() {
     <section className="liquid-glass-soft rounded-[1.75rem] p-4 sm:p-5 mt-6 sm:mt-8 mb-6 sm:mb-8">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-          <span className="inline-block h-2.5 w-2.5 rounded-full bg-amber-400 animate-pulse" />
-          Launch Countdowns by Country
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+          Launched Countries
         </h2>
         <span className="text-xs sm:text-sm text-white/70">
-          {upcoming.length} / {COUNTRIES.length} remaining
+          {launched.length} / {COUNTRIES.length} live
         </span>
       </div>
-      {upcoming.length === 0 ? (
-        <p className="text-sm text-white/80">GTA 6 has launched in all listed countries.</p>
+      {launched.length === 0 ? (
+        <p className="text-sm text-white/80">
+          No country has launched yet. New Zealand will be first at midnight local (19 Nov 2026).
+        </p>
       ) : (
         <div className="flex flex-wrap gap-2">
-          {upcoming.map((c) => (
-            <div
+          {launched.map((c) => (
+            <span
               key={c.code}
-              className="inline-flex items-center gap-2 rounded-2xl border border-white/12 bg-white/5 px-3 py-2 text-xs sm:text-sm text-white/95"
-              title={`${c.name} local launch countdown`}
+              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/25 bg-emerald-500/10 px-3 py-1.5 text-xs sm:text-sm text-white/95"
+              title={`Launched at local midnight in ${c.name}`}
             >
               <span className="text-base leading-none">{c.flag}</span>
               <span className="font-medium">{c.name}</span>
-              <span className="text-cyan-100 tabular-nums font-semibold whitespace-nowrap">
-                {formatRemaining(c.launchMs - now)}
-              </span>
-            </div>
+            </span>
           ))}
         </div>
       )}
