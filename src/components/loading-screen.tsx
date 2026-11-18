@@ -8,25 +8,29 @@ export default function LoadingScreen() {
 
   useEffect(() => {
     let done = false;
+    const start = Date.now();
+    const minDuration = 3000;
+
     const finish = () => {
       if (done) return;
       done = true;
-      // small delay so transition feels smooth
-      setFade(true);
-      window.setTimeout(() => setVisible(false), 700);
+      const elapsed = Date.now() - start;
+      const wait = Math.max(0, minDuration - elapsed);
+      window.setTimeout(() => {
+        setFade(true);
+        window.setTimeout(() => setVisible(false), 700);
+      }, wait);
     };
 
     if (document.readyState === "complete") {
-      const t = window.setTimeout(finish, 600);
-      return () => window.clearTimeout(t);
+      finish();
+      return;
     }
 
-    const onLoad = () => {
-      window.setTimeout(finish, 400);
-    };
+    const onLoad = () => finish();
     window.addEventListener("load", onLoad);
     // fallback in case load is slow/hangs
-    const fallback = window.setTimeout(finish, 5000);
+    const fallback = window.setTimeout(finish, 6000);
     return () => {
       window.removeEventListener("load", onLoad);
       window.clearTimeout(fallback);
