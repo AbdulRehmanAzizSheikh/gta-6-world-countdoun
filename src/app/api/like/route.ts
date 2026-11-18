@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { getDb, isDbConfigured } from "@/lib/mongodb";
-import { withPublicBase } from "@/lib/display";
+import { isDbConfigured } from "@/lib/mongodb";
+import { bumpDisplay, bumpReal } from "@/lib/display";
 
 export const dynamic = "force-dynamic";
 
 // Body: { type: "like" | "dislike", action: "add" | "remove" }
+// Like/Dislike: real counter (admin) + public display counter (seeded).
 export async function POST(req: Request) {
   if (!isDbConfigured())
     return NextResponse.json({ ok: false, error: "db-not-configured" }, { status: 503 });
@@ -17,24 +18,9 @@ export async function POST(req: Request) {
     }
     const field = type === "like" ? "likes" : "dislikes";
     const delta = action === "add" ? 1 : -1;
-    const db = await getDb();
-    await db.collection("stats").updateOne(
-      { _id: "global" as unknown as never },
-      { $inc: { [field]: delta } },
-      { upsert: true },
-    );
-    await db.collection("stats").updateOne(
-      { _id: "global" as unknown as never, [field]: { $lt: 0 } } as never,
-      { $set: { [field]: 0 } },
-    );
-    const stats = await db.collection("stats").findOne({ _id: "global" as unknown as never });
-    return NextResponse.json({
-      ok: true,
-      ...withPublicBase({
-        likes: Math.max(0, stats?.likes ?? 0),
-        dislikes: Math.max(0, stats?.dislikes ?? 0),
-      }),
-    });
+    await bumpReal(field, delta);
+    const d = await bumpDisplay(field, delta);
+    return NextResponse.json({ ok: true, likes: d.likes, dislikes: d.dislikes });
   } catch {
     return NextResponse.json({ ok: false, error: "db-error" }, { status: 503 });
   }

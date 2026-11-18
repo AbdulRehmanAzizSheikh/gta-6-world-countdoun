@@ -8,6 +8,7 @@ type Overview = {
   visits: number;
   likes: number;
   dislikes: number;
+  display?: { visits: number; likes: number; dislikes: number };
   subscribers: { email: string; subscribedAt: string }[];
   feedbacks: { name: string; email: string; message: string; createdAt: string }[];
 };
@@ -146,6 +147,14 @@ export default function AdminPage() {
                 </div>
               ))}
             </div>
+
+            {data.display && (
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-xs sm:text-sm text-white/70">
+                <span className="font-semibold text-white/85">Public site par dikh rahe hain:</span>{" "}
+                👁️ {data.display.visits.toLocaleString()} visits · 👍 {data.display.likes.toLocaleString()} likes · 👎{" "}
+                {data.display.dislikes.toLocaleString()} dislikes
+              </div>
+            )}
 
             <section className="liquid-glass rounded-3xl p-5 sm:p-6">
               <div className="flex items-center justify-between gap-3">

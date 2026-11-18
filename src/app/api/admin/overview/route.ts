@@ -14,6 +14,7 @@ export async function GET(req: Request) {
   try {
     const db = await getDb();
     const stats = await db.collection("stats").findOne({ _id: "global" as unknown as never });
+    const display = await db.collection("display").findOne({ _id: "global" as unknown as never });
     const [subscribers, feedbacks] = await Promise.all([
       db.collection("subscribers").find({}).sort({ subscribedAt: -1 }).toArray(),
       db.collection("feedback").find({}).sort({ createdAt: -1 }).toArray(),
@@ -23,6 +24,11 @@ export async function GET(req: Request) {
       visits: stats?.visits ?? 0,
       likes: stats?.likes ?? 0,
       dislikes: stats?.dislikes ?? 0,
+      display: {
+        visits: display?.visits ?? 0,
+        likes: display?.likes ?? 0,
+        dislikes: display?.dislikes ?? 0,
+      },
       subscribers: subscribers.map((s) => ({ email: s.email, subscribedAt: s.subscribedAt })),
       feedbacks: feedbacks.map((f) => ({
         name: f.name ?? "Anonymous",
