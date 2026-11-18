@@ -218,6 +218,28 @@ export default function CountdownApp() {
     hour12: true,
     timeZoneName: "short",
   });
+  const nzLaunchInSelected = formatInZone(referenceLaunchMs, selected.timeZone, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+    timeZoneName: "short",
+  });
+  const selectedNow =
+    now > 0
+      ? formatInZone(now, selected.timeZone, {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })
+      : "Loading…";
   const selectedLocalLaunchShort = formatInZone(selectedLaunchMs, selected.timeZone, {
     weekday: "short",
     month: "short",
@@ -321,10 +343,10 @@ export default function CountdownApp() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.22em] text-fuchsia-200/80">
-                  From / First launch reference
+                  From / First launch reference — in your time
                 </p>
                 <h2 className="mt-1 text-2xl font-semibold text-white">
-                  {reference.flag} {reference.name}
+                  {reference.flag} {reference.name} → {selected.flag} {selected.name}
                 </h2>
               </div>
               <span className="liquid-chip rounded-full px-2.5 py-1 text-xs text-emerald-100">
@@ -332,7 +354,9 @@ export default function CountdownApp() {
               </span>
             </div>
             <p className="mt-3 text-sm text-white/95 leading-relaxed">
-              New Zealand is the first in the world to hit GTA VI launch at local midnight.
+              Countdown to New Zealand&apos;s official launch stays the same everywhere in real time, but the clock shown
+              below is in <span className="text-white font-medium">{selected.name}</span> time, so you can see exactly when
+              it happens locally for you.
             </p>
 
             <div className="mt-4 grid grid-cols-2 min-[420px]:grid-cols-4 gap-2">
@@ -351,23 +375,35 @@ export default function CountdownApp() {
 
             <div className="mt-4 space-y-3 rounded-2xl bg-white/8 border border-white/12 p-4 text-sm">
               <div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-white/80">NZ launch in your time</div>
+                <div className="mt-1 text-white font-medium leading-snug">{nzLaunchInSelected}</div>
+              </div>
+              <div className="border-t border-white/10 pt-3">
                 <div className="text-[11px] uppercase tracking-[0.18em] text-white/80">NZ local launch</div>
                 <div className="mt-1 text-white font-medium leading-snug">{nzLocalLaunch}</div>
               </div>
-              <div className="border-t border-white/10 pt-3">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-white/80">Current time in NZ</div>
-                <div className="mt-1 font-mono text-cyan-100">
-                  {now > 0
-                    ? formatInZone(now, reference.timeZone, {
-                        weekday: "short",
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-                        hour12: true,
-                      })
-                    : "Loading…"}
+              <div className="grid sm:grid-cols-2 gap-3 border-t border-white/10 pt-3">
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-white/80">
+                    Your time now ({selected.name})
+                  </div>
+                  <div className="mt-1 font-mono text-cyan-100">{selectedNow}</div>
+                </div>
+                <div>
+                  <div className="text-[11px] uppercase tracking-[0.18em] text-white/80">Current time in NZ</div>
+                  <div className="mt-1 font-mono text-cyan-100">
+                    {now > 0
+                      ? formatInZone(now, reference.timeZone, {
+                          weekday: "short",
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          hour12: true,
+                        })
+                      : "Loading…"}
+                  </div>
                 </div>
               </div>
             </div>
