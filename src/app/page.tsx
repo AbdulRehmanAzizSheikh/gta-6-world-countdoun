@@ -106,6 +106,29 @@ export default function Page() {
 
             <div className="flex flex-col gap-3 lg:min-w-[300px]">
               <div className="liquid-glass rounded-2xl p-4 sm:p-5">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/80">About the developer</p>
+                <p className="mt-2 text-base font-semibold text-white">Abdul Rehman</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-white/95">
+                  Full-stack web & software developer and founder of SuperSoftware Agency. Builds modern,
+                  fast web experiences with Next.js and TypeScript — including tools like this GTA VI world
+                  countdown.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-1.5 text-[11px] text-white/80">
+                  <span className="rounded-full border border-white/15 px-2.5 py-1">Next.js / React</span>
+                  <span className="rounded-full border border-white/15 px-2.5 py-1">TypeScript</span>
+                  <span className="rounded-full border border-white/15 px-2.5 py-1">Tailwind CSS</span>
+                  <span className="rounded-full border border-white/15 px-2.5 py-1">Full-stack</span>
+                </div>
+                <a
+                  href="https://github.com/AbdulRehmanAzizSheikh"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-block text-sm text-cyan-100 hover:text-white transition-colors"
+                >
+                  github.com/AbdulRehmanAzizSheikh ↗
+                </a>
+              </div>
+              <div className="liquid-glass rounded-2xl p-4 sm:p-5">
                 <p className="text-[11px] uppercase tracking-[0.22em] text-white/80">Developer Contact</p>
                 <p className="mt-2 text-base font-semibold text-white">Abdul Rehman</p>
                 <a
