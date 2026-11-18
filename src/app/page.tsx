@@ -4,6 +4,7 @@ import TopBar from "@/components/top-bar";
 import HeroCountdown from "@/components/hero-countdown";
 import MusicPlayer from "@/components/music-player";
 import LaunchFireworks from "@/components/launch-fireworks";
+import LaunchedCountries from "@/components/launched-countries";
 
 
 
@@ -179,6 +180,8 @@ export default function Page() {
             </div>
           </div>
         </header>
+
+        <LaunchedCountries />
 
         <CountdownApp />
 
