@@ -5,17 +5,6 @@ import { loadUploadedAudio, saveUploadedAudio } from "@/lib/audio-store";
 
 const PRESETS = [
   { id: "miami-viceroy", name: "Miami Viceroy (GTA Vice City)", src: "/music/miami-viceroy.mp3" },
-  { id: "miami-nights", name: "Miami Nights – Extended Theme", src: "/music/miami-nights.mp3" },
-  { id: "world-vice", name: "World Vice (Synthwave)", src: "/music/world-vice.mp3" },
-  { id: "neon-laser-horizon", name: "Neon Laser Horizon", src: "/music/neon-laser-horizon.mp3" },
-  { id: "retrofuture-nasty", name: "RetroFuture Nasty", src: "/music/retrofuture-nasty.mp3" },
-  { id: "chill-wave", name: "Chill Wave", src: "/music/chill-wave.mp3" },
-  { id: "eighties-action", name: "Eighties Action", src: "/music/eighties-action.mp3" },
-  { id: "ether-disco", name: "Ether Disco", src: "/music/ether-disco.mp3" },
-  { id: "voltaic", name: "Voltaic", src: "/music/voltaic.mp3" },
-  { id: "laser-groove", name: "Laser Groove", src: "/music/laser-groove.mp3" },
-  { id: "funkorama", name: "Funkorama", src: "/music/funkorama.mp3" },
-  { id: "space-1990", name: "Space 1990", src: "/music/space-1990.mp3" },
 ];
 
 export default function MusicPlayer() {
