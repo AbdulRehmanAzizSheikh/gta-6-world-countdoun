@@ -5,6 +5,13 @@ import { loadUploadedAudio, saveUploadedAudio } from "@/lib/audio-store";
 
 type Track = { id: string; name: string; src: string };
 
+function formatTime(sec: number) {
+  if (!Number.isFinite(sec) || sec < 0) return "0:00";
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
 export default function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -16,6 +23,8 @@ export default function MusicPlayer() {
   const [customName, setCustomName] = useState<string | null>(null);
   const [customUrl, setCustomUrl] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   const isCustom = trackId === "custom" && !!customUrl;
   const activePreset = presets.find((p) => p.id === trackId) ?? presets[0];
@@ -23,8 +32,9 @@ export default function MusicPlayer() {
     ? (customName ?? "My upload")
     : activePreset?.name ?? "No tracks";
   const src = isCustom ? customUrl! : (activePreset?.src ?? "");
+  const hasSource = !!src;
 
-  // Load dynamic track list (numbered files in /public/music: 1.mp3, 2.aac, 3.mp4, ...)
+  // Load dynamic track list (all audio files in /public/music)
   useEffect(() => {
     fetch("/api/music", { cache: "no-store" })
       .then((r) => r.json())
@@ -33,7 +43,6 @@ export default function MusicPlayer() {
         setPresets(tracks);
         const saved = localStorage.getItem("gta6_track");
         if (saved === "custom") {
-          // keep custom selection if user had uploaded; resolved after IndexedDB load
           setTrackId("custom");
         } else if (saved && tracks.some((t) => t.id === saved)) {
           setTrackId(saved);
@@ -80,6 +89,8 @@ export default function MusicPlayer() {
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
+    setCurrentTime(0);
+    setDuration(0);
     if (!src) {
       a.removeAttribute("src");
       a.load();
@@ -87,12 +98,47 @@ export default function MusicPlayer() {
       return;
     }
     a.src = src;
-    a.loop = true;
+    a.loop = false;
     if (playing) {
       a.play().catch(() => setPlaying(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src]);
+
+  // Audio progress events
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+    const onTime = () => setCurrentTime(a.currentTime || 0);
+    const onMeta = () => setDuration(Number.isFinite(a.duration) ? a.duration : 0);
+    const onEnded = () => {
+      // auto-advance to next preset if available
+      if (presets.length > 0) {
+        const idx = presets.findIndex((p) => p.id === trackId);
+        if (idx >= 0 && idx < presets.length - 1) {
+          setTrackId(presets[idx + 1].id);
+          setPlaying(true);
+          return;
+        }
+        if (idx === presets.length - 1) {
+          setTrackId(presets[0].id);
+          setPlaying(true);
+          return;
+        }
+      }
+      setPlaying(false);
+    };
+    a.addEventListener("timeupdate", onTime);
+    a.addEventListener("loadedmetadata", onMeta);
+    a.addEventListener("durationchange", onMeta);
+    a.addEventListener("ended", onEnded);
+    return () => {
+      a.removeEventListener("timeupdate", onTime);
+      a.removeEventListener("loadedmetadata", onMeta);
+      a.removeEventListener("durationchange", onMeta);
+      a.removeEventListener("ended", onEnded);
+    };
+  }, [presets, trackId]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -116,6 +162,35 @@ export default function MusicPlayer() {
     }
   }
 
+  function seekTo(time: number) {
+    const a = audioRef.current;
+    if (!a) return;
+    const d = Number.isFinite(a.duration) ? a.duration : duration;
+    const t = Math.min(Math.max(0, time), d || 0);
+    a.currentTime = t;
+    setCurrentTime(t);
+  }
+
+  function skip(delta: number) {
+    const a = audioRef.current;
+    if (!a) return;
+    seekTo((a.currentTime || 0) + delta);
+  }
+
+  function prevTrack() {
+    if (presets.length === 0) return;
+    const idx = presets.findIndex((p) => p.id === trackId);
+    if (idx <= 0) setTrackId(presets[presets.length - 1].id);
+    else setTrackId(presets[idx - 1].id);
+  }
+
+  function nextTrack() {
+    if (presets.length === 0) return;
+    const idx = presets.findIndex((p) => p.id === trackId);
+    if (idx === -1 || idx >= presets.length - 1) setTrackId(presets[0].id);
+    else setTrackId(presets[idx + 1].id);
+  }
+
   function onUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -132,7 +207,7 @@ export default function MusicPlayer() {
         a.src = url;
         a.volume = volume;
         a.muted = muted;
-        a.loop = true;
+        a.loop = false;
         a.play().then(() => setPlaying(true)).catch(() => {});
       }
     }, 0);
@@ -142,71 +217,124 @@ export default function MusicPlayer() {
   return (
     <div
       ref={dropdownRef}
-      className="relative flex items-center gap-2 sm:gap-3 w-full rounded-full border border-white/15 bg-white/10 pl-1 pr-2 py-1 text-[10px] sm:text-xs"
-      title="Music — presets are free-to-use (Kevin MacLeod, CC BY 4.0). Your uploaded songs play only on YOUR device, never uploaded anywhere."
+      className="relative flex flex-col gap-1.5 w-full rounded-2xl border border-white/15 bg-white/10 px-2 py-1.5 text-[10px] sm:text-xs"
     >
-      <audio ref={audioRef} preload="none" />
+      <audio ref={audioRef} preload="metadata" />
 
-      {/* Play / pause */}
-      <button
-        onClick={togglePlay}
-        aria-label={playing ? "Pause music" : "Play music"}
-        className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-br from-amber-400 via-fuchsia-500 to-violet-600 flex items-center justify-center text-[12px] sm:text-sm text-white hover:opacity-90 transition-opacity"
-      >
-        {playing ? "⏸" : "▶"}
-      </button>
+      {/* Row 1: transport + track + upload + volume */}
+      <div className="flex items-center gap-1.5 sm:gap-2 w-full min-w-0">
+        <button
+          onClick={prevTrack}
+          disabled={presets.length === 0}
+          aria-label="Previous track"
+          className="h-7 w-7 sm:h-8 sm:w-8 rounded-full border border-white/15 bg-white/10 flex items-center justify-center text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
+          title="Previous"
+        >
+          ⏮
+        </button>
+        <button
+          onClick={() => skip(-5)}
+          disabled={!hasSource}
+          aria-label="Back 5 seconds"
+          className="h-7 px-1.5 sm:h-8 sm:px-2 rounded-full border border-white/15 bg-white/10 text-[10px] sm:text-xs text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
+          title="-5s"
+        >
+          −5s
+        </button>
+        <button
+          onClick={togglePlay}
+          disabled={!hasSource}
+          aria-label={playing ? "Pause music" : "Play music"}
+          className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-br from-amber-400 via-fuchsia-500 to-violet-600 flex items-center justify-center text-[12px] sm:text-sm text-white hover:opacity-90 disabled:opacity-40 transition-opacity"
+        >
+          {playing ? "⏸" : "▶"}
+        </button>
+        <button
+          onClick={() => skip(5)}
+          disabled={!hasSource}
+          aria-label="Forward 5 seconds"
+          className="h-7 px-1.5 sm:h-8 sm:px-2 rounded-full border border-white/15 bg-white/10 text-[10px] sm:text-xs text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
+          title="+5s"
+        >
+          +5s
+        </button>
+        <button
+          onClick={nextTrack}
+          disabled={presets.length === 0}
+          aria-label="Next track"
+          className="h-7 w-7 sm:h-8 sm:w-8 rounded-full border border-white/15 bg-white/10 flex items-center justify-center text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
+          title="Next"
+        >
+          ⏭
+        </button>
 
-      {/* Current track — opens dropdown */}
-      <button
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        className="flex items-center gap-1 flex-1 min-w-0 h-7 sm:h-8 px-2 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors truncate text-left"
-      >
-        <span className="truncate">🎵 {currentName}</span>
-        <span aria-hidden className="text-[10px] opacity-70">▾</span>
-      </button>
+        {/* Current track — opens dropdown */}
+        <button
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          className="flex items-center gap-1 flex-1 min-w-0 h-7 sm:h-8 px-2 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors truncate text-left"
+        >
+          <span className="truncate">🎵 {currentName}</span>
+          <span aria-hidden className="text-[10px] opacity-70">▾</span>
+        </button>
 
-      {/* Big, obvious upload button */}
-      <label
-        className="flex items-center gap-1 h-7 sm:h-8 px-1.5 sm:px-2.5 rounded-full bg-fuchsia-500/15 border border-fuchsia-400/25 text-fuchsia-100 hover:bg-fuchsia-500/25 hover:border-fuchsia-400/40 cursor-pointer transition-colors whitespace-nowrap"
-        title="Apna MP3 yahan upload karo — sirf tumhare device pe chalega, server pe nahi"
-      >
-        <span aria-hidden>📁</span>
-        <span className="font-medium">Upload Music</span>
-        <input type="file" accept="audio/*" onChange={onUpload} className="hidden" />
-      </label>
+        <label
+          className="hidden sm:flex items-center gap-1 h-7 sm:h-8 px-1.5 sm:px-2.5 rounded-full bg-fuchsia-500/15 border border-fuchsia-400/25 text-fuchsia-100 hover:bg-fuchsia-500/25 cursor-pointer transition-colors whitespace-nowrap"
+          title="Apna audio upload karo — sirf tumhare device pe chalega"
+        >
+          <span aria-hidden>📁</span>
+          <span className="font-medium">Upload</span>
+          <input type="file" accept="audio/*" onChange={onUpload} className="hidden" />
+        </label>
 
-      {/* Volume */}
-      <input
-        type="range"
-        min={0}
-        max={100}
-        value={Math.round(volume * 100)}
-        onChange={(e) => {
-          const v = Number(e.target.value) / 100;
-          setVolume(v);
-          if (v > 0 && muted) setMuted(false);
-        }}
-        aria-label="Volume"
-        className="w-12 sm:w-32 lg:w-56 h-1 accent-fuchsia-500 cursor-pointer"
-      />
+        <input
+          type="range"
+          min={0}
+          max={100}
+          value={Math.round(volume * 100)}
+          onChange={(e) => {
+            const v = Number(e.target.value) / 100;
+            setVolume(v);
+            if (v > 0 && muted) setMuted(false);
+          }}
+          aria-label="Volume"
+          className="w-14 sm:w-24 lg:w-40 h-1 accent-fuchsia-500 cursor-pointer"
+        />
+        <button
+          onClick={() => setMuted((m) => !m)}
+          aria-label={muted ? "Unmute" : "Mute"}
+          className="text-sm sm:text-base text-white/85 hover:text-white transition-colors px-0.5"
+        >
+          {muted || volume === 0 ? "🔇" : "🔊"}
+        </button>
+      </div>
 
-      {/* Mute / unmute */}
-      <button
-        onClick={() => setMuted((m) => !m)}
-        aria-label={muted ? "Unmute" : "Mute"}
-        className="text-sm sm:text-base text-white/85 hover:text-white transition-colors px-0.5"
-      >
-        {muted || volume === 0 ? "🔇" : "🔊"}
-      </button>
+      {/* Row 2: seek bar + running time below */}
+      <div className="flex flex-col gap-0.5 w-full px-1">
+        <input
+          type="range"
+          min={0}
+          max={duration || 0}
+          step={0.1}
+          value={Math.min(currentTime, duration || 0)}
+          onChange={(e) => seekTo(Number(e.target.value))}
+          disabled={!hasSource || !Number.isFinite(duration) || duration <= 0}
+          aria-label="Seek"
+          className="w-full h-1 accent-fuchsia-500 cursor-pointer disabled:opacity-40"
+        />
+        <div className="flex items-center justify-between text-[10px] text-white/70 tabular-nums px-0.5">
+          <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
+          <span>{duration > 0 ? `${Math.min(100, Math.round((currentTime / duration) * 100))}%` : "0%"}</span>
+        </div>
+      </div>
 
       {/* Dropdown */}
       {open && (
         <div
           role="listbox"
           aria-label="Choose track"
-          className="absolute left-0 top-full mt-2 z-50 w-60 sm:w-72 max-w-[92vw] rounded-2xl border border-white/15 bg-[#0f1320]/95 backdrop-blur-xl shadow-2xl shadow-black/40 p-1.5"
+          className="absolute left-0 top-full mt-2 z-50 w-64 sm:w-80 max-w-[92vw] rounded-2xl border border-white/15 bg-[#0f1320]/95 backdrop-blur-xl shadow-2xl shadow-black/40 p-1.5 max-h-72 overflow-y-auto"
         >
           <p className="px-2.5 pt-1.5 pb-1 text-[10px] uppercase tracking-[0.2em] text-fuchsia-200/80">
             Music
