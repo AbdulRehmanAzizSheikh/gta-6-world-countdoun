@@ -21,28 +21,67 @@ export default function TopBar() {
   const [fbState, setFbState] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [navHidden, setNavHidden] = useState(false);
 
-  // Smart navbar: hides on scroll down, slides back on scroll up
+  // Smart navbar — global listeners: ANY upward scroll (mouse wheel, trackpad,
+  // touch-drag, keyboard, scrollbar) from ANY position brings the navbar back instantly.
   useEffect(() => {
-    let lastY = window.scrollY;
-    let ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(() => {
-        const y = window.scrollY;
-        if (y <= 60) {
-          setNavHidden(false);
-        } else if (y > lastY + 4) {
-          setNavHidden(true);
-        } else if (y < lastY - 4) {
-          setNavHidden(false);
-        }
-        lastY = y;
-        ticking = false;
-      });
-    }
+    let touchY: number | null = null;
+    let lastY = typeof window !== "undefined" ? window.scrollY : 0;
+    let raf = 0;
+    let pending: boolean | null = null;
+
+    const apply = () => {
+      raf = 0;
+      if (pending !== null) {
+        setNavHidden(pending);
+        pending = null;
+      }
+    };
+    const queue = (hide: boolean) => {
+      pending = hide;
+      if (!raf) raf = window.requestAnimationFrame(apply);
+    };
+    const hideIfDeep = () => queue(window.scrollY > 60);
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY < 0) queue(false); // scrolling up — show navbar
+      else hideIfDeep(); // scrolling down — hide when page is deep enough
+    };
+    const onScroll = () => {
+      // Fallback for keyboard, scrollbar drags and programmatic scrolls
+      const y = window.scrollY;
+      if (y <= 40 || y < lastY - 2) queue(false);
+      else if (y > lastY + 2) queue(true);
+      lastY = y;
+    };
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches[0]?.clientY ?? null;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const y = e.touches[0]?.clientY ?? null;
+      if (y === null || touchY === null) return;
+      if (y > touchY + 6) queue(false); // finger moved down => scrolling up
+      if (y < touchY - 6) hideIfDeep(); // finger moved up => scrolling down
+      touchY = y;
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp" || e.key === "PageUp" || e.key === "Home") queue(false);
+      if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === "End") hideIfDeep();
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("keydown", onKey, { passive: true });
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("keydown", onKey);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
   }, []);
 
   useEffect(() => {
