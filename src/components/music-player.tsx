@@ -3,36 +3,55 @@
 import { useEffect, useRef, useState } from "react";
 import { loadUploadedAudio, saveUploadedAudio } from "@/lib/audio-store";
 
-const TRACK_SLOTS = 12;
-
-const PRESETS = Array.from({ length: TRACK_SLOTS }, (_, i) => {
-  const n = i + 1;
-  return { id: String(n), name: `Track ${n}`, src: `/music/${n}.mp3` };
-});
+type Track = { id: string; name: string; src: string };
 
 export default function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [presets, setPresets] = useState<Track[]>([]);
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [volume, setVolume] = useState(0.9);
-  const [trackId, setTrackId] = useState(PRESETS[0].id);
+  const [trackId, setTrackId] = useState<string>("");
   const [customName, setCustomName] = useState<string | null>(null);
   const [customUrl, setCustomUrl] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
   const isCustom = trackId === "custom" && !!customUrl;
-  const currentName = isCustom ? (customName ?? "My upload") : PRESETS.find((p) => p.id === trackId)?.name ?? PRESETS[0].name;
-  const src = isCustom ? customUrl! : PRESETS.find((p) => p.id === trackId)?.src ?? PRESETS[0].src;
+  const activePreset = presets.find((p) => p.id === trackId) ?? presets[0];
+  const currentName = isCustom
+    ? (customName ?? "My upload")
+    : activePreset?.name ?? "No tracks";
+  const src = isCustom ? customUrl! : (activePreset?.src ?? "");
+
+  // Load dynamic track list (numbered files in /public/music: 1.mp3, 2.aac, 3.mp4, ...)
+  useEffect(() => {
+    fetch("/api/music", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => {
+        const tracks: Track[] = Array.isArray(d?.tracks) ? d.tracks : [];
+        setPresets(tracks);
+        const saved = localStorage.getItem("gta6_track");
+        if (saved === "custom") {
+          // keep custom selection if user had uploaded; resolved after IndexedDB load
+          setTrackId("custom");
+        } else if (saved && tracks.some((t) => t.id === saved)) {
+          setTrackId(saved);
+        } else if (tracks.length > 0) {
+          setTrackId(tracks[0].id);
+        } else {
+          setTrackId("");
+        }
+      })
+      .catch(() => setPresets([]));
+  }, []);
 
   // Restore saved prefs
   useEffect(() => {
     const v = localStorage.getItem("gta6_volume");
     const m = localStorage.getItem("gta6_muted");
-    const t = localStorage.getItem("gta6_track");
     if (v !== null) setVolume(Math.min(1, Math.max(0, Number(v))));
     if (m !== null) setMuted(m === "1");
-    if (t && (PRESETS.some((p) => p.id === t) || t === "custom")) setTrackId(t);
     // Restore uploaded audio (IndexedDB)
     loadUploadedAudio().then((saved) => {
       if (saved) {
@@ -61,6 +80,12 @@ export default function MusicPlayer() {
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
+    if (!src) {
+      a.removeAttribute("src");
+      a.load();
+      setPlaying(false);
+      return;
+    }
     a.src = src;
     a.loop = true;
     if (playing) {
@@ -80,7 +105,7 @@ export default function MusicPlayer() {
 
   function togglePlay() {
     const a = audioRef.current;
-    if (!a) return;
+    if (!a || !src) return;
     if (playing) {
       a.pause();
       setPlaying(false);
@@ -184,9 +209,12 @@ export default function MusicPlayer() {
           className="absolute left-0 top-full mt-2 z-50 w-60 sm:w-72 max-w-[92vw] rounded-2xl border border-white/15 bg-[#0f1320]/95 backdrop-blur-xl shadow-2xl shadow-black/40 p-1.5"
         >
           <p className="px-2.5 pt-1.5 pb-1 text-[10px] uppercase tracking-[0.2em] text-fuchsia-200/80">
-            GTA-style synthwave
+            Music
           </p>
-          {PRESETS.map((p) => (
+          {presets.length === 0 && !customUrl && (
+            <p className="px-2.5 py-2 text-xs text-white/60">No tracks in /music (add 1.mp3, 2.aac, …)</p>
+          )}
+          {presets.map((p) => (
             <button
               key={p.id}
               role="option"
