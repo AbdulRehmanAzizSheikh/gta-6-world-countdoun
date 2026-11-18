@@ -126,7 +126,7 @@ export default function TopBar() {
       <div className="sticky top-0 z-40">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-1.5">
           <div className="liquid-glass rounded-2xl px-2 sm:px-3 py-1.5 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 text-[10px] sm:text-xs">
-            {/* Line 1: brand + stats + votes + feedback + music */}
+            {/* Line 1: brand + stats + votes + feedback + subscribe */}
             <div className="flex items-center gap-1 sm:gap-2 min-w-0">
               <Link href="/" className="flex items-center gap-1 sm:gap-1.5 font-semibold text-white shrink-0" aria-label="Home — GTA 6 World Countdown">
                 <img src="/brand/icon.png" alt="SuperSoftware Agency" className="h-6 w-6 sm:h-7 sm:w-7 rounded-lg" />
@@ -160,19 +160,19 @@ export default function TopBar() {
                 </button>
               </div>
 
-              <div className="ml-auto sm:ml-0">
-                <MusicPlayer />
-              </div>
+              <button
+                type="button"
+                onClick={() => setSubscribeOpen(true)}
+                className="ml-auto h-7 sm:h-8 rounded-full bg-gradient-to-r from-amber-400 via-fuchsia-500 to-violet-600 px-3 sm:px-4 text-[10px] sm:text-xs font-semibold text-white hover:opacity-90 transition-opacity whitespace-nowrap inline-flex items-center gap-1 shrink-0 justify-center"
+              >
+                ✉️ <span>Subscribe</span>
+              </button>
             </div>
 
-            {/* Subscribe button (opens popup) */}
-            <button
-              type="button"
-              onClick={() => setSubscribeOpen(true)}
-              className="h-7 sm:h-8 rounded-full bg-gradient-to-r from-amber-400 via-fuchsia-500 to-violet-600 px-3 sm:px-4 text-[10px] sm:text-xs font-semibold text-white hover:opacity-90 transition-opacity whitespace-nowrap inline-flex items-center gap-1 w-full sm:w-auto sm:ml-auto sm:shrink-0 justify-center"
-            >
-              ✉️ <span>Subscribe</span>
-            </button>
+            {/* Line 2 (mobile) / right side (desktop): music */}
+            <div className="flex items-center gap-1.5 w-full sm:w-auto sm:shrink-0">
+              <MusicPlayer />
+            </div>
           </div>
         </div>
       </div>
