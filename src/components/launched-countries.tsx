@@ -68,16 +68,16 @@ export default function LaunchedCountries() {
 
   if (now === null) {
     return (
-      <section className="liquid-glass-soft rounded-[1.75rem] p-5 sm:p-6 mt-6 sm:mt-8">
+      <section className="liquid-glass-soft rounded-[1.75rem] p-6 sm:p-7 lg:p-8 mt-8 sm:mt-10">
         <p className="text-sm text-white/70">Loading launched countries…</p>
       </section>
     );
   }
 
   return (
-    <section className="liquid-glass-soft rounded-[1.75rem] p-5 sm:p-6 lg:p-7 mt-6 sm:mt-8">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4 sm:mb-5">
-        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
+    <section className="liquid-glass-soft rounded-[1.75rem] p-6 sm:p-7 lg:p-8 mt-8 sm:mt-10">
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-5 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-3">
           <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
           Launched Countries
         </h2>
@@ -90,11 +90,11 @@ export default function LaunchedCountries() {
           No country has launched yet. New Zealand will be first at midnight local (19 Nov 2026).
         </p>
       ) : (
-        <div className="flex flex-wrap gap-2.5 sm:gap-3">
+        <div className="flex flex-wrap gap-3 sm:gap-4">
           {launched.map((c) => (
             <span
               key={c.code}
-              className="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-500/10 px-3.5 sm:px-4 py-2 text-xs sm:text-sm text-white/95"
+              className="inline-flex items-center gap-2.5 rounded-full border border-emerald-300/25 bg-emerald-500/10 px-4 sm:px-5 py-2.5 text-xs sm:text-sm text-white/95"
               title={`Launched at local midnight in ${c.name}`}
             >
               <span className="text-base sm:text-lg leading-none">{c.flag}</span>
