@@ -30,11 +30,11 @@ export default function TopBar() {
       ticking = true;
       window.requestAnimationFrame(() => {
         const y = window.scrollY;
-        if (y < 90) {
+        if (y <= 60) {
           setNavHidden(false);
-        } else if (y > lastY + 6) {
+        } else if (y > lastY + 4) {
           setNavHidden(true);
-        } else if (y < lastY - 6) {
+        } else if (y < lastY - 4) {
           setNavHidden(false);
         }
         lastY = y;
@@ -152,8 +152,10 @@ export default function TopBar() {
   return (
     <>
       <div
-        className={`sticky top-0 z-40 transition-transform duration-300 ease-out will-change-transform ${
-          navHidden ? "-translate-y-full pointer-events-none" : "translate-y-0"
+        className={`sticky top-3 sm:top-4 z-40 px-1 sm:px-2 transition-all duration-300 ease-out will-change-transform ${
+          navHidden
+            ? "-translate-y-[140%] opacity-0 pointer-events-none"
+            : "translate-y-0 opacity-100"
         }`}
       >
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-1.5">
