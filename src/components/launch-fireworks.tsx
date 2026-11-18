@@ -85,6 +85,7 @@ export default function LaunchFireworks() {
     () => COUNTRIES.find((c) => c.code === REFERENCE_COUNTRY_CODE) ?? COUNTRIES[0],
     [],
   );
+  // Launch celebration at NZ midnight (first official launch)
   const launchMs = useMemo(() => getLaunchUtcMs(nz.timeZone), [nz.timeZone]);
 
   useEffect(() => {
