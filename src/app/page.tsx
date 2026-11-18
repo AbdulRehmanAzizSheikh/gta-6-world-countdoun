@@ -3,12 +3,14 @@ import BackgroundSlideshow from "@/components/background-slideshow";
 import TopBar from "@/components/top-bar";
 import HeroCountdown from "@/components/hero-countdown";
 import MusicPlayer from "@/components/music-player";
+import LaunchFireworks from "@/components/launch-fireworks";
 
 
 
 export default function Page() {
   return (
     <main className="relative min-h-screen overflow-hidden text-white">
+      <LaunchFireworks />
       <BackgroundSlideshow />
       <script
         type="application/ld+json"
