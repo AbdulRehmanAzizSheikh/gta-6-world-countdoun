@@ -100,7 +100,7 @@ function CountdownBlock({
       <div className="font-[family-name:var(--font-display)] text-4xl sm:text-5xl lg:text-6xl leading-none tracking-wide text-white drop-shadow-[0_2px_8px_rgba(255,255,255,0.12)]">
         {value}
       </div>
-      <div className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.24em] text-white/65">
+      <div className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.24em] text-white/90">
         {label}
       </div>
     </div>
@@ -147,24 +147,24 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
           <p className="text-lg sm:text-xl font-semibold text-emerald-200">
             GTA VI is officially live in {country.name}.
           </p>
-          <p className="mt-1 text-sm text-white/75">Local unlock time: {localLaunch}</p>
+          <p className="mt-1 text-sm text-white/95">Local unlock time: {localLaunch}</p>
         </div>
       ) : (
         <div className="liquid-glass rounded-2xl p-4 sm:p-5">
           <div className="grid sm:grid-cols-[1fr_auto] gap-4 sm:gap-6">
             <div>
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/80">
                 Official launch in {country.name}
               </p>
               <p className="mt-2 text-base sm:text-lg font-semibold leading-snug text-white">
                 {localLaunch}
               </p>
-              <p className="mt-2 text-sm text-white/65">
+              <p className="mt-2 text-sm text-white/90">
                 Rockstar&apos;s announced release: midnight local time, 19 Nov 2026.
               </p>
             </div>
             <div className="sm:text-right sm:min-w-[190px] sm:pl-4 sm:border-l border-white/10">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">Current time there</p>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/80">Current time there</p>
               <p className="mt-2 font-mono text-sm sm:text-base text-cyan-100">{localNow}</p>
             </div>
           </div>
@@ -280,7 +280,7 @@ export default function CountdownApp() {
                       </option>
                     ))}
                   </select>
-                  <div className="text-sm text-white/65">
+                  <div className="text-sm text-white/90">
                     Selected: <span className="text-white font-medium">{selected.flag} {selected.name}</span>
                   </div>
                 </div>
@@ -292,9 +292,9 @@ export default function CountdownApp() {
 
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="liquid-glass-soft rounded-2xl p-5">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">Selected country launch</p>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/80">Selected country launch</p>
               <p className="mt-2 text-lg font-semibold text-white">{selected.flag} {selected.name}</p>
-              <p className="mt-3 text-sm text-white/70 leading-relaxed">
+              <p className="mt-3 text-sm text-white/95 leading-relaxed">
                 Official local launch: <span className="text-white font-medium">{selectedLocalLaunchShort}</span>
               </p>
               <p className="mt-3 text-sm text-cyan-100/90 leading-relaxed">
@@ -306,8 +306,8 @@ export default function CountdownApp() {
               </p>
             </div>
             <div className="liquid-glass-soft rounded-2xl p-5">
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">Important</p>
-              <ul className="mt-3 space-y-2.5 text-sm text-white/72 leading-relaxed">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/80">Important</p>
+              <ul className="mt-3 space-y-2.5 text-sm text-white/95 leading-relaxed">
                 <li>• GTA VI console release date: <span className="text-white">19 November 2026</span>.</li>
                 <li>• Rockstar&apos;s stated rollout: <span className="text-white">midnight local time</span> in each region.</li>
                 <li>• <span className="text-white">New Zealand</span> reaches local midnight first, so it gets the earliest official launch.</li>
@@ -331,7 +331,7 @@ export default function CountdownApp() {
                 Earliest
               </span>
             </div>
-            <p className="mt-3 text-sm text-white/70 leading-relaxed">
+            <p className="mt-3 text-sm text-white/95 leading-relaxed">
               New Zealand is the first in the world to hit GTA VI launch at local midnight.
             </p>
 
@@ -344,18 +344,18 @@ export default function CountdownApp() {
               ].map((x) => (
                 <div key={x.l} className="rounded-2xl bg-white/10 border border-white/15 p-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
                   <div className="font-[family-name:var(--font-display)] text-2xl leading-none text-white">{x.v}</div>
-                  <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/60">{x.l}</div>
+                  <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/85">{x.l}</div>
                 </div>
               ))}
             </div>
 
             <div className="mt-4 space-y-3 rounded-2xl bg-white/8 border border-white/12 p-4 text-sm">
               <div>
-                <div className="text-[11px] uppercase tracking-[0.18em] text-white/55">NZ local launch</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-white/80">NZ local launch</div>
                 <div className="mt-1 text-white font-medium leading-snug">{nzLocalLaunch}</div>
               </div>
               <div className="border-t border-white/10 pt-3">
-                <div className="text-[11px] uppercase tracking-[0.18em] text-white/55">Current time in NZ</div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-white/80">Current time in NZ</div>
                 <div className="mt-1 font-mono text-cyan-100">
                   {now > 0
                     ? formatInZone(now, reference.timeZone, {
@@ -377,16 +377,16 @@ export default function CountdownApp() {
           </div>
 
           <div className="liquid-glass-soft rounded-2xl p-5">
-            <p className="text-[11px] uppercase tracking-[0.22em] text-white/45">Compare countries</p>
-            <p className="mt-1 text-sm text-white/70">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-white/80">Compare countries</p>
+            <p className="mt-1 text-sm text-white/95">
               Compare your country with any other region (e.g. Pakistan vs India) and see both local launch times.
             </p>
 
             <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <label className="text-[11px] uppercase tracking-[0.18em] text-white/55" htmlFor="compare-country">
+              <label className="text-[11px] uppercase tracking-[0.18em] text-white/80" htmlFor="compare-country">
                 Your country
               </label>
-              <label className="text-[11px] uppercase tracking-[0.18em] text-white/55" htmlFor="compare-with">
+              <label className="text-[11px] uppercase tracking-[0.18em] text-white/80" htmlFor="compare-with">
                 Compare with
               </label>
               <select
@@ -417,15 +417,15 @@ export default function CountdownApp() {
 
             <div className="mt-3 space-y-3 text-sm">
               <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
-                <span className="text-white/75">{selected.flag} {selected.name}</span>
+                <span className="text-white/95">{selected.flag} {selected.name}</span>
                 <span className="text-right font-medium text-white/95">{selectedLocalLaunchShort}</span>
               </div>
               <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
-                <span className="text-white/75">{compare.flag} {compare.name}</span>
+                <span className="text-white/95">{compare.flag} {compare.name}</span>
                 <span className="text-right font-medium text-white/95">{compareLocalLaunchShort}</span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/75">Difference</span>
+                <span className="text-white/95">Difference</span>
                 <span className="text-right font-semibold text-cyan-100">
                   {compareDiffHours === 0
                     ? "Same live moment"
@@ -435,7 +435,7 @@ export default function CountdownApp() {
                 </span>
               </div>
             </div>
-            <p className="mt-4 text-xs text-white/45 leading-relaxed">
+            <p className="mt-4 text-xs text-white/80 leading-relaxed">
               Each region is shown at its own local midnight unlock (19 Nov 2026). Platform/store timing can vary slightly.
             </p>
           </div>
