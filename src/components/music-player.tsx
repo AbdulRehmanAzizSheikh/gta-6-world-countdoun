@@ -108,7 +108,7 @@ export default function MusicPlayer() {
   return (
     <div
       ref={dropdownRef}
-      className="relative flex items-center gap-1 rounded-full border border-white/15 bg-white/10 pl-1 pr-1 py-0.5 sm:py-1 shrink-0 text-[10px] sm:text-xs"
+      className="relative flex items-center gap-2 sm:gap-3 w-full rounded-full border border-white/15 bg-white/10 pl-1 pr-2 py-1 text-[10px] sm:text-xs"
       title="Music — presets are free-to-use (Kevin MacLeod, CC BY 4.0). Your uploaded songs play only on YOUR device, never uploaded anywhere."
     >
       <audio ref={audioRef} preload="none" />
@@ -127,7 +127,7 @@ export default function MusicPlayer() {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="listbox"
-        className="flex items-center gap-1 max-w-[92px] min-[480px]:max-w-[120px] sm:max-w-[150px] lg:max-w-[170px] h-7 sm:h-8 px-1.5 sm:px-2 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors truncate"
+        className="flex items-center gap-1 flex-1 min-w-0 h-7 sm:h-8 px-2 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors truncate text-left"
       >
         <span className="truncate">🎵 {currentName}</span>
         <span aria-hidden className="text-[10px] opacity-70">▾</span>
@@ -139,7 +139,7 @@ export default function MusicPlayer() {
         title="Apna MP3 yahan upload karo — sirf tumhare device pe chalega, server pe nahi"
       >
         <span aria-hidden>📁</span>
-        <span className="hidden sm:inline font-medium">Upload Music</span>
+        <span className="font-medium">Upload Music</span>
         <input type="file" accept="audio/*" onChange={onUpload} className="hidden" />
       </label>
 
@@ -155,7 +155,7 @@ export default function MusicPlayer() {
           if (v > 0 && muted) setMuted(false);
         }}
         aria-label="Volume"
-        className="w-10 min-[480px]:w-14 sm:w-16 lg:w-20 h-1 accent-fuchsia-500 cursor-pointer"
+        className="w-16 sm:w-32 lg:w-56 h-1 accent-fuchsia-500 cursor-pointer"
       />
 
       {/* Mute / unmute */}

@@ -169,8 +169,8 @@ export default function TopBar() {
               </button>
             </div>
 
-            {/* Line 2 (mobile) / right side (desktop): music */}
-            <div className="flex items-center gap-1.5 w-full sm:w-auto sm:shrink-0">
+            {/* Line 2 (mobile) / right side (desktop): music stretches to fill */}
+            <div className="flex items-center gap-1.5 w-full sm:flex-1 sm:min-w-0">
               <MusicPlayer />
             </div>
           </div>
