@@ -14,6 +14,7 @@ export default function TopBar() {
   const [email, setEmail] = useState("");
   const [subState, setSubState] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [subscribeOpen, setSubscribeOpen] = useState(false);
   const [fbName, setFbName] = useState("");
   const [fbEmail, setFbEmail] = useState("");
   const [fbMessage, setFbMessage] = useState("");
@@ -82,7 +83,14 @@ export default function TopBar() {
       });
       const d = await res.json();
       setSubState(d?.ok ? "done" : "error");
-      if (d?.ok) setStats((s) => ({ ...s, subscribers: s.subscribers + 1 }));
+      if (d?.ok) {
+        setStats((s) => ({ ...s, subscribers: s.subscribers + 1 }));
+        setTimeout(() => {
+          setSubscribeOpen(false);
+          setEmail("");
+          setSubState("idle");
+        }, 1800);
+      }
     } catch {
       setSubState("error");
     }
@@ -157,31 +165,52 @@ export default function TopBar() {
               </div>
             </div>
 
-            {/* Line 2 (mobile) / right side (desktop): subscribe */}
-            <form onSubmit={subscribe} className="flex items-center gap-1.5 w-full sm:w-auto sm:ml-auto sm:shrink-0">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                aria-label="Subscribe with your email"
-                className="h-7 sm:h-8 min-w-0 flex-1 sm:flex-none sm:w-36 lg:w-48 rounded-full border border-white/15 bg-white/10 px-3 text-[10px] sm:text-xs text-white placeholder-white/45 outline-none focus:border-white/35 focus:bg-white/15"
-              />
-              <button
-                type="submit"
-                disabled={subState === "loading"}
-                className="h-7 sm:h-8 rounded-full bg-gradient-to-r from-amber-400 via-fuchsia-500 to-violet-600 px-3 sm:px-4 text-[10px] sm:text-xs font-semibold text-white hover:opacity-90 transition-opacity disabled:opacity-60 whitespace-nowrap"
-              >
-                {subState === "done" ? "Subscribed ✓" : subState === "loading" ? "…" : "Subscribe"}
-              </button>
-            </form>
+            {/* Subscribe button (opens popup) */}
+            <button
+              type="button"
+              onClick={() => setSubscribeOpen(true)}
+              className="h-7 sm:h-8 rounded-full bg-gradient-to-r from-amber-400 via-fuchsia-500 to-violet-600 px-3 sm:px-4 text-[10px] sm:text-xs font-semibold text-white hover:opacity-90 transition-opacity whitespace-nowrap inline-flex items-center gap-1 w-full sm:w-auto sm:ml-auto sm:shrink-0 justify-center"
+            >
+              ✉️ <span>Subscribe</span>
+            </button>
           </div>
-          {subState === "error" && (
-            <p className="mt-1 px-2 text-[10px] text-rose-200">Subscribe failed — please check the email and try again.</p>
-          )}
         </div>
       </div>
+
+      {subscribeOpen && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Subscribe to launch alerts">
+          <form onSubmit={subscribe} className="liquid-glass rounded-3xl p-5 sm:p-6 w-full max-w-md space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <h3 className="text-lg font-semibold text-white">✉️ Launch alerts</h3>
+              <button type="button" onClick={() => { setSubscribeOpen(false); setSubState("idle"); }} className="text-white/70 hover:text-white text-xl leading-none" aria-label="Close">×</button>
+            </div>
+            <p className="text-sm text-white/80 leading-relaxed">
+              Get an email the moment GTA 6 officially launches — worldwide timezone breakdown included.
+            </p>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              aria-label="Your email address"
+              className="w-full rounded-xl border border-white/15 bg-white/10 px-3 py-3 text-sm text-white placeholder-white/45 outline-none focus:border-white/35 focus:bg-white/15"
+              autoFocus
+            />
+            {subState === "error" && (
+              <p className="text-xs text-rose-300">Subscribe failed — please check the email and try again.</p>
+            )}
+            <button
+              type="submit"
+              disabled={subState === "loading"}
+              className="w-full rounded-xl bg-gradient-to-r from-amber-400 via-fuchsia-500 to-violet-600 py-3 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-60"
+            >
+              {subState === "done" ? "Subscribed ✓" : subState === "loading" ? "Subscribing…" : "Subscribe to launch alerts"}
+            </button>
+            <p className="text-[10px] text-white/50 text-center">No spam. Unsubscribe anytime.</p>
+          </form>
+        </div>
+      )}
 
       {feedbackOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true">
