@@ -217,101 +217,112 @@ export default function MusicPlayer() {
   return (
     <div
       ref={dropdownRef}
-      className="relative flex flex-col gap-1.5 w-full rounded-2xl border border-white/15 bg-white/10 px-2 py-1.5 text-[10px] sm:text-xs"
+      className="relative flex flex-col gap-3 sm:gap-4 w-full rounded-2xl border border-white/15 bg-white/10 px-3 sm:px-5 py-3 sm:py-4 text-[10px] sm:text-xs"
     >
       <audio ref={audioRef} preload="metadata" />
 
-      {/* Row 1: transport + track + upload + volume */}
-      <div className="flex items-center gap-1.5 sm:gap-2 w-full min-w-0">
-        <button
-          onClick={prevTrack}
-          disabled={presets.length === 0}
-          aria-label="Previous track"
-          className="h-7 w-7 sm:h-8 sm:w-8 rounded-full border border-white/15 bg-white/10 flex items-center justify-center text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
-          title="Previous"
-        >
-          ⏮
-        </button>
-        <button
-          onClick={() => skip(-5)}
-          disabled={!hasSource}
-          aria-label="Back 5 seconds"
-          className="h-7 px-1.5 sm:h-8 sm:px-2 rounded-full border border-white/15 bg-white/10 text-[10px] sm:text-xs text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
-          title="-5s"
-        >
-          −5s
-        </button>
-        <button
-          onClick={togglePlay}
-          disabled={!hasSource}
-          aria-label={playing ? "Pause music" : "Play music"}
-          className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-br from-amber-400 via-fuchsia-500 to-violet-600 flex items-center justify-center text-[12px] sm:text-sm text-white hover:opacity-90 disabled:opacity-40 transition-opacity"
-        >
-          {playing ? "⏸" : "▶"}
-        </button>
-        <button
-          onClick={() => skip(5)}
-          disabled={!hasSource}
-          aria-label="Forward 5 seconds"
-          className="h-7 px-1.5 sm:h-8 sm:px-2 rounded-full border border-white/15 bg-white/10 text-[10px] sm:text-xs text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
-          title="+5s"
-        >
-          +5s
-        </button>
-        <button
-          onClick={nextTrack}
-          disabled={presets.length === 0}
-          aria-label="Next track"
-          className="h-7 w-7 sm:h-8 sm:w-8 rounded-full border border-white/15 bg-white/10 flex items-center justify-center text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
-          title="Next"
-        >
-          ⏭
-        </button>
+      {/* Row 1: left (upload + volume) | center (transport) | right (track select) */}
+      <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between w-full min-w-0">
+        {/* Left */}
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0 lg:flex-1 order-2 lg:order-1">
+          <label
+            className="flex items-center gap-2 h-9 px-3 sm:px-4 rounded-full bg-fuchsia-500/15 border border-fuchsia-400/25 text-fuchsia-100 hover:bg-fuchsia-500/25 cursor-pointer transition-colors whitespace-nowrap shrink-0"
+            title="Apna audio upload karo — sirf tumhare device pe chalega"
+          >
+            <span aria-hidden>📁</span>
+            <span className="font-medium hidden sm:inline">Upload Music</span>
+            <span className="font-medium sm:hidden">Upload</span>
+            <input type="file" accept="audio/*" onChange={onUpload} className="hidden" />
+          </label>
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <button
+              onClick={() => setMuted((m) => !m)}
+              aria-label={muted ? "Unmute" : "Mute"}
+              className="h-9 w-9 rounded-full border border-white/15 bg-white/10 flex items-center justify-center text-sm text-white/90 hover:bg-white/20 transition-colors shrink-0"
+              title={muted ? "Unmute" : "Mute"}
+            >
+              {muted || volume === 0 ? "🔇" : "🔊"}
+            </button>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={Math.round(volume * 100)}
+              onChange={(e) => {
+                const v = Number(e.target.value) / 100;
+                setVolume(v);
+                if (v > 0 && muted) setMuted(false);
+              }}
+              aria-label="Volume"
+              className="w-24 sm:w-32 md:w-40 h-1.5 accent-fuchsia-500 cursor-pointer"
+            />
+          </div>
+        </div>
 
-        {/* Current track — opens dropdown */}
-        <button
-          onClick={() => setOpen((o) => !o)}
-          aria-expanded={open}
-          aria-haspopup="listbox"
-          className="flex items-center gap-1 flex-1 min-w-0 h-7 sm:h-8 px-2 rounded-full text-white/90 hover:text-white hover:bg-white/10 transition-colors truncate text-left"
-        >
-          <span className="truncate">🎵 {currentName}</span>
-          <span aria-hidden className="text-[10px] opacity-70">▾</span>
-        </button>
+        {/* Center: transport buttons */}
+        <div className="flex items-center justify-center gap-2 sm:gap-3 order-1 lg:order-2 lg:flex-1 py-1">
+          <button
+            onClick={prevTrack}
+            disabled={presets.length === 0}
+            aria-label="Previous track"
+            className="h-9 w-9 sm:h-10 sm:w-10 rounded-full border border-white/15 bg-white/10 flex items-center justify-center text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
+            title="Previous"
+          >
+            ⏮
+          </button>
+          <button
+            onClick={() => skip(-5)}
+            disabled={!hasSource}
+            aria-label="Back 5 seconds"
+            className="h-9 px-3 sm:h-10 sm:px-3.5 rounded-full border border-white/15 bg-white/10 text-[11px] sm:text-xs font-medium text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
+            title="-5s"
+          >
+            −5s
+          </button>
+          <button
+            onClick={togglePlay}
+            disabled={!hasSource}
+            aria-label={playing ? "Pause music" : "Play music"}
+            className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-gradient-to-br from-amber-400 via-fuchsia-500 to-violet-600 flex items-center justify-center text-base sm:text-lg text-white hover:opacity-90 disabled:opacity-40 transition-opacity shadow-lg shadow-fuchsia-900/30 mx-1"
+          >
+            {playing ? "⏸" : "▶"}
+          </button>
+          <button
+            onClick={() => skip(5)}
+            disabled={!hasSource}
+            aria-label="Forward 5 seconds"
+            className="h-9 px-3 sm:h-10 sm:px-3.5 rounded-full border border-white/15 bg-white/10 text-[11px] sm:text-xs font-medium text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
+            title="+5s"
+          >
+            +5s
+          </button>
+          <button
+            onClick={nextTrack}
+            disabled={presets.length === 0}
+            aria-label="Next track"
+            className="h-9 w-9 sm:h-10 sm:w-10 rounded-full border border-white/15 bg-white/10 flex items-center justify-center text-white/90 hover:bg-white/20 disabled:opacity-40 transition-colors"
+            title="Next"
+          >
+            ⏭
+          </button>
+        </div>
 
-        <label
-          className="hidden sm:flex items-center gap-1 h-7 sm:h-8 px-1.5 sm:px-2.5 rounded-full bg-fuchsia-500/15 border border-fuchsia-400/25 text-fuchsia-100 hover:bg-fuchsia-500/25 cursor-pointer transition-colors whitespace-nowrap"
-          title="Apna audio upload karo — sirf tumhare device pe chalega"
-        >
-          <span aria-hidden>📁</span>
-          <span className="font-medium">Upload</span>
-          <input type="file" accept="audio/*" onChange={onUpload} className="hidden" />
-        </label>
-
-        <input
-          type="range"
-          min={0}
-          max={100}
-          value={Math.round(volume * 100)}
-          onChange={(e) => {
-            const v = Number(e.target.value) / 100;
-            setVolume(v);
-            if (v > 0 && muted) setMuted(false);
-          }}
-          aria-label="Volume"
-          className="w-14 sm:w-24 lg:w-40 h-1 accent-fuchsia-500 cursor-pointer"
-        />
-        <button
-          onClick={() => setMuted((m) => !m)}
-          aria-label={muted ? "Unmute" : "Mute"}
-          className="text-sm sm:text-base text-white/85 hover:text-white transition-colors px-0.5"
-        >
-          {muted || volume === 0 ? "🔇" : "🔊"}
-        </button>
+        {/* Right: track selection */}
+        <div className="flex items-center justify-end min-w-0 lg:flex-1 order-3">
+          <button
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            aria-haspopup="listbox"
+            className="flex items-center gap-2 max-w-full lg:max-w-[18rem] h-9 sm:h-10 px-3.5 sm:px-4 rounded-full border border-white/15 bg-white/10 text-white/90 hover:text-white hover:bg-white/15 transition-colors truncate text-left"
+          >
+            <span className="truncate">🎵 {currentName}</span>
+            <span aria-hidden className="text-[10px] opacity-70 shrink-0">▾</span>
+          </button>
+        </div>
       </div>
 
-      {/* Row 2: seek bar + running time below */}
-      <div className="flex flex-col gap-0.5 w-full px-1">
+      {/* Row 2: seek slider (neeche) + running time */}
+      <div className="flex flex-col gap-1.5 w-full px-1 sm:px-2 pt-1">
         <input
           type="range"
           min={0}
@@ -321,9 +332,9 @@ export default function MusicPlayer() {
           onChange={(e) => seekTo(Number(e.target.value))}
           disabled={!hasSource || !Number.isFinite(duration) || duration <= 0}
           aria-label="Seek"
-          className="w-full h-1 accent-fuchsia-500 cursor-pointer disabled:opacity-40"
+          className="w-full h-1.5 accent-fuchsia-500 cursor-pointer disabled:opacity-40"
         />
-        <div className="flex items-center justify-between text-[10px] text-white/70 tabular-nums px-0.5">
+        <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-white/70 tabular-nums px-0.5">
           <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
           <span>{duration > 0 ? `${Math.min(100, Math.round((currentTime / duration) * 100))}%` : "0%"}</span>
         </div>
