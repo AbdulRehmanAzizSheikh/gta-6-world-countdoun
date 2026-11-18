@@ -261,10 +261,16 @@ export default function LaunchFireworks() {
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
       <div className="absolute inset-x-0 top-0 flex justify-center pt-6 sm:pt-10 px-4 pointer-events-none">
         <div className="pointer-events-auto liquid-glass rounded-3xl px-5 sm:px-8 py-4 sm:py-5 text-center border border-fuchsia-300/30 shadow-[0_0_60px_rgba(236,72,153,0.25)]">
-          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] text-fuchsia-200/90">New Zealand — First Launch</p>
-          <h2 className="mt-2 text-2xl sm:text-4xl lg:text-5xl font-extrabold accent-text">GTA 6 IS LIVE! 🎆</h2>
-          <p className="mt-2 text-sm sm:text-base text-white/90">
-            Grand Theft Auto VI has officially launched in New Zealand — the first in the world.
+          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] text-fuchsia-200/90">First in the world</p>
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold accent-text">GTA 6 IS LIVE! 🎆</h2>
+            <div className="inline-flex items-center gap-2 rounded-2xl border border-fuchsia-300/40 bg-fuchsia-500/20 px-4 py-2 text-base sm:text-xl font-bold text-white shadow-[0_0_20px_rgba(236,72,153,0.25)]">
+              <span className="text-xl sm:text-2xl">{nz.flag}</span>
+              <span>{nz.name}</span>
+            </div>
+          </div>
+          <p className="mt-3 text-sm sm:text-base text-white/90">
+            Grand Theft Auto VI has officially launched in {nz.flag} <span className="font-semibold text-white">{nz.name}</span> — the first country to hit midnight on 19 November 2026.
           </p>
           <button
             type="button"
