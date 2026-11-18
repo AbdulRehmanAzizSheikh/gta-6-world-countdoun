@@ -74,14 +74,43 @@ export default function Page() {
 
         <CountdownApp />
 
-        <footer className="mt-10 sm:mt-14 border-t border-white/10 pt-6 text-sm text-white/55 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-          <p>
-            Built as a GTA VI fan countdown for <span className="text-white/80">gta-6-countdown.supersoftware.agency</span>.
-            Not affiliated with Rockstar Games.
-          </p>
-          <p>
-            Source basis: Rockstar&apos;s announced 19 Nov 2026 release at midnight local time.
-          </p>
+        <footer className="mt-10 sm:mt-14 border-t border-white/10 pt-6 text-sm text-white/55">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-2 max-w-2xl">
+              <p>
+                Built as a GTA VI fan countdown for{" "}
+                <span className="text-white/80">gta-6-countdown.supersoftware.agency</span>.
+                Not affiliated with Rockstar Games.
+              </p>
+              <p>
+                Source basis: Rockstar&apos;s announced 19 Nov 2026 release at midnight local time.
+              </p>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4 lg:gap-6 text-sm">
+              <div className="panel rounded-xl p-4 border-white/10">
+                <p className="text-xs uppercase tracking-[0.2em] text-white/45">Developer Contact</p>
+                <a
+                  href="mailto:mail@abdulrehman.sbs"
+                  className="mt-2 inline-block text-white hover:text-fuchsia-200 transition-colors"
+                >
+                  mail@abdulrehman.sbs
+                </a>
+              </div>
+              <div className="panel rounded-xl p-4 border-white/10">
+                <p className="text-xs uppercase tracking-[0.2em] text-white/45">
+                  Company / Agency
+                </p>
+                <p className="mt-2 text-white/90">SuperSoftware Agency</p>
+                <a
+                  href="mailto:hello@supersoftware.agency"
+                  className="mt-1 inline-block text-white hover:text-cyan-200 transition-colors"
+                >
+                  hello@supersoftware.agency
+                </a>
+                <p className="mt-1 text-xs text-white/50">Software / web development</p>
+              </div>
+            </div>
+          </div>
         </footer>
       </div>
     </main>
