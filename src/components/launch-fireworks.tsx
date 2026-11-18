@@ -80,6 +80,14 @@ export default function LaunchFireworks() {
   const [launched, setLaunched] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const [testMode, setTestMode] = useState(false);
+  const [dismissed, setDismissed] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return localStorage.getItem("gta6_launch_nz_dismissed") === "1";
+    } catch {
+      return false;
+    }
+  });
 
   const nz = useMemo(
     () => COUNTRIES.find((c) => c.code === REFERENCE_COUNTRY_CODE) ?? COUNTRIES[0],
@@ -96,7 +104,19 @@ export default function LaunchFireworks() {
   }, []);
 
   useEffect(() => {
+    if (dismissed) {
+      setShowOverlay(false);
+      return;
+    }
+    function isDismissedNow() {
+      try {
+        return localStorage.getItem("gta6_launch_nz_dismissed") === "1";
+      } catch {
+        return false;
+      }
+    }
     function check() {
+      if (dismissed || isDismissedNow()) return;
       const now = Date.now();
       if (testMode || now >= launchMs) {
         setLaunched(true);
@@ -106,7 +126,7 @@ export default function LaunchFireworks() {
     check();
     const id = setInterval(check, 1000);
     return () => clearInterval(id);
-  }, [launchMs, testMode]);
+  }, [launchMs, testMode, dismissed]);
 
   useEffect(() => {
     if (!launched) return;
@@ -275,7 +295,13 @@ export default function LaunchFireworks() {
           </p>
           <button
             type="button"
-            onClick={() => setShowOverlay(false)}
+            onClick={() => {
+              setShowOverlay(false);
+              setDismissed(true);
+              try {
+                localStorage.setItem("gta6_launch_nz_dismissed", "1");
+              } catch {}
+            }}
             className="mt-3 inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs sm:text-sm text-white/90 hover:bg-white/20 transition-colors"
           >
             Close celebration
