@@ -107,6 +107,8 @@ export default function Page() {
       <TopBar />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10">
+        <CountdownApp />
+
         <header className="mb-6 sm:mb-8">
           <div className="liquid-glass rounded-[2rem] overflow-hidden relative border-white/20 min-h-[420px] sm:min-h-[460px] lg:min-h-[500px]">
             <img
@@ -167,8 +169,6 @@ export default function Page() {
             </div>
           </div>
         </header>
-
-        <CountdownApp />
 
         <section aria-labelledby="faq-heading" className="liquid-glass-soft rounded-[1.75rem] p-5 sm:p-7 mt-6 sm:mt-8">
           <h2 id="faq-heading" className="text-xl sm:text-2xl font-bold text-white">
