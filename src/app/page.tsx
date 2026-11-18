@@ -54,21 +54,14 @@ export default function Page() {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10">
         <header className="mb-6 sm:mb-8">
-          <div className="liquid-glass rounded-[2rem] overflow-hidden relative border-white/20">
-            <div className="absolute inset-0 grid grid-cols-2">
-              <img
-                src="/gta6/lock-and-load.jpg"
-                alt="Official GTA VI Lock and Load artwork"
-                className="h-full w-full object-cover object-[70%_20%]"
-              />
-              <img
-                src="/gta6/cover-art.jpg"
-                alt="Official GTA VI cover artwork"
-                className="h-full w-full object-cover object-top border-l border-white/15"
-              />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/20" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#04050a] via-transparent to-black/30" />
+          <div className="liquid-glass rounded-[2rem] overflow-hidden relative border-white/20 min-h-[420px] sm:min-h-[460px] lg:min-h-[500px]">
+            <img
+              src="/gta6/cover-art.jpg"
+              alt="Official GTA VI cover artwork with Jason and Lucia"
+              className="absolute inset-0 h-full w-full object-cover object-[70%_25%] sm:object-[75%_20%] lg:object-[80%_15%]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#04050a]/95 via-[#04050a]/80 sm:via-[#04050a]/60 to-[#04050a]/10 sm:to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#04050a] via-[#04050a]/30 to-transparent" />
 
             <div className="relative p-4 sm:p-6 lg:p-8">
               <div className="max-w-2xl">
