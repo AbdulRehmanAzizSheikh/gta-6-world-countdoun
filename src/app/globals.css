@@ -1,14 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #05030a;
-  --fg: #fff7fb;
-  --pink: #ff4fd8;
-  --hot: #ff7a18;
-  --cyan: #35e7ff;
-  --violet: #7c5cff;
-  --card: rgba(14, 10, 24, 0.72);
-  --line: rgba(255, 255, 255, 0.12);
+  --bg: #04050a;
+  --fg: #f7f9ff;
+  --muted: rgba(247, 249, 255, 0.72);
 }
 
 @theme inline {
@@ -30,56 +25,83 @@ body {
 body {
   margin: 0;
   color: var(--fg);
-  background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(255, 79, 216, 0.25), transparent 60%),
-    radial-gradient(900px 500px at 100% 0%, rgba(53, 231, 255, 0.18), transparent 55%),
-    radial-gradient(800px 500px at 50% 110%, rgba(255, 122, 24, 0.22), transparent 60%),
-    linear-gradient(180deg, #0b0616 0%, #05030a 45%, #090313 100%);
-  font-family: var(--font-body), system-ui, sans-serif;
+  background: #04050a;
+  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow-x: hidden;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: radial-gradient(circle at center, black 35%, transparent 95%);
-  opacity: 0.25;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: rgba(255, 79, 216, 0.45);
-  color: white;
+  background: rgba(255, 170, 210, 0.28);
+  color: #fff;
 }
 
-.text-glow {
-  text-shadow: 0 0 18px rgba(255, 79, 216, 0.45), 0 0 42px rgba(124, 92, 255, 0.35);
+a {
+  color: inherit;
 }
 
-.panel {
-  background: var(--card);
-  border: 1px solid var(--line);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(14px);
+.liquid-glass {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.1) 38%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
 }
 
-.sunset {
-  background: linear-gradient(135deg, #ffcf4d 0%, #ff7a18 28%, #ff4fd8 58%, #7c5cff 100%);
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto 1px;
+  height: 42%;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+  pointer-events: none;
 }
 
-@keyframes floaty {
-  0%,
-  100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+.liquid-glass-soft {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(22px) saturate(155%);
+  -webkit-backdrop-filter: blur(22px) saturate(155%);
 }
 
-@keyframes pulseRing {
-  0% { opacity: 0.55; transform: scale(0.98); }
-  70% { opacity: 0; transform: scale(1.08); }
-  100% { opacity: 0; transform: scale(1.08); }
+.liquid-glass-soft::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px auto 1px;
+  height: 38%;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+
+.liquid-chip {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+.accent-text {
+  background: linear-gradient(90deg, #fff6d7 0%, #ffc08a 25%, #ff8dc7 55%, #b8a5ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.image-fade-bottom {
+  mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
 }

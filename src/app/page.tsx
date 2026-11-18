@@ -1,71 +1,87 @@
 import CountdownApp from "@/components/countdown-app";
 
+const heroArt = "/gta6/jason-lucia-01-landscape.jpg";
+const viceCityArt = "/gta6/vice-city-postcard.jpg";
+const viLogo = "/gta6/gta6-logo.png";
+
 export default function Page() {
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-25 scale-105"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1533106497176-45ae19e68ba2?auto=format&fit=crop&w=1800&q=80')",
-          }}
+    <main className="relative min-h-screen overflow-hidden text-white">
+      <div className="fixed inset-0 -z-20">
+        <img
+          src={heroArt}
+          alt="Official GTA VI artwork featuring Jason and Lucia"
+          className="h-full w-full object-cover scale-[1.02]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#05030a]/30 via-[#05030a]/70 to-[#05030a]" />
-        <div className="absolute -top-24 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-fuchsia-500/20 blur-3xl" />
-        <div className="absolute top-40 -left-20 h-72 w-72 rounded-full bg-cyan-400/15 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-orange-500/15 blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-[#0b1020]/45 to-[#04050a]/80" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,170,210,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(125,231,255,0.12),transparent_30%)]" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        <header className="mb-8 sm:mb-12">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/25 px-3 py-1.5 text-xs sm:text-sm text-white/80 backdrop-blur">
-                <span className="text-base">🌴</span>
-                <span>Vice City vibes • Worldwide launch tracker</span>
-              </div>
-              <p className="mt-4 text-sm uppercase tracking-[0.35em] text-fuchsia-200/80">
-                Grand Theft Auto VI
-              </p>
-              <h1 className="mt-2 font-[family-name:var(--font-display)] leading-[0.9] tracking-wide">
-                <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-transparent bg-clip-text sunset text-glow">
-                  GTA VI
-                </span>
-                <span className="block text-4xl sm:text-5xl md:text-6xl text-white/95">
-                  WORLD COUNTDOWN
-                </span>
-              </h1>
-              <p className="mt-4 max-w-2xl text-base sm:text-lg text-white/75 leading-relaxed">
-                Track how long is left until GTA 6 officially launches in your selected country.
-                Default view is set to <span className="text-white font-semibold">Pakistan</span>, with{" "}
-                <span className="text-white font-semibold">New Zealand</span> shown as the first place in the world
-                to reach launch (midnight local time, 19 November 2026).
-              </p>
-            </div>
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-5 sm:py-8 lg:py-10">
+        <header className="mb-6 sm:mb-8">
+          <div className="liquid-glass rounded-[2rem] p-4 sm:p-6 lg:p-8 overflow-hidden">
+            <div className="relative z-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+              <div className="max-w-3xl">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="liquid-chip rounded-full px-3 py-1.5 text-xs sm:text-sm text-white/90">
+                    Official GTA VI artwork
+                  </span>
+                  <span className="liquid-chip rounded-full px-3 py-1.5 text-xs sm:text-sm text-white/90">
+                    Liquid glass UI
+                  </span>
+                </div>
 
-            <div className="panel rounded-2xl p-4 sm:p-5 w-full lg:w-[340px]">
-              <div className="flex items-center gap-4">
-                <div className="relative h-16 w-16 shrink-0 rounded-xl sunset p-[2px]">
-                  <div className="h-full w-full rounded-[10px] bg-[#0b0616] flex items-center justify-center font-[family-name:var(--font-display)] text-3xl">
-                    VI
+                <div className="mt-5 flex items-center gap-4 sm:gap-5">
+                  <div className="liquid-glass-soft rounded-2xl p-2 sm:p-3 shrink-0">
+                    <img src={viLogo} alt="GTA VI logo" className="h-12 sm:h-16 w-auto" />
                   </div>
-                  <span className="absolute inset-0 rounded-xl animate-[pulseRing_2.8s_ease-out_infinite] border border-fuchsia-300/50" />
+                  <div>
+                    <p className="text-xs sm:text-sm uppercase tracking-[0.28em] text-white/70">
+                      Grand Theft Auto VI
+                    </p>
+                    <h1 className="mt-1 text-3xl sm:text-5xl lg:text-6xl font-semibold leading-[1.02] tracking-tight text-balance">
+                      <span className="accent-text">World Countdown</span>
+                    </h1>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.2em] text-white/50">Global release date</p>
-                  <p className="text-xl font-semibold text-white">19 November 2026</p>
-                  <p className="text-sm text-white/65">Midnight local time (regional rollout)</p>
+
+                <p className="mt-5 max-w-2xl text-sm sm:text-base lg:text-lg leading-relaxed text-white/80">
+                  Check how long is left until GTA 6 officially launches in your selected country.
+                  Default view is <span className="font-semibold text-white">Pakistan</span>, and the{" "}
+                  <span className="font-semibold text-white">from / first-launch reference</span> is{" "}
+                  <span className="font-semibold text-white">New Zealand</span> because it reaches
+                  midnight local time first on 19 November 2026.
+                </p>
+
+                <div className="mt-5 flex flex-wrap gap-2.5">
+                  <div className="liquid-chip rounded-2xl px-4 py-2.5">
+                    <div className="text-[11px] uppercase tracking-[0.2em] text-white/55">Default country</div>
+                    <div className="mt-1 text-sm sm:text-base font-medium">🇵🇰 Pakistan</div>
+                  </div>
+                  <div className="liquid-chip rounded-2xl px-4 py-2.5">
+                    <div className="text-[11px] uppercase tracking-[0.2em] text-white/55">From / first launch</div>
+                    <div className="mt-1 text-sm sm:text-base font-medium">🇳🇿 New Zealand</div>
+                  </div>
+                  <div className="liquid-chip rounded-2xl px-4 py-2.5">
+                    <div className="text-[11px] uppercase tracking-[0.2em] text-white/55">Release</div>
+                    <div className="mt-1 text-sm sm:text-base font-medium">19 Nov 2026 • Midnight local</div>
+                  </div>
                 </div>
               </div>
-              <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-                <div className="rounded-lg bg-white/5 border border-white/10 px-3 py-2">
-                  <div className="text-white/45 uppercase tracking-[0.18em]">Default country</div>
-                  <div className="mt-1 text-white font-medium">🇵🇰 Pakistan</div>
-                </div>
-                <div className="rounded-lg bg-white/5 border border-white/10 px-3 py-2">
-                  <div className="text-white/45 uppercase tracking-[0.18em]">First launch</div>
-                  <div className="mt-1 text-white font-medium">🇳🇿 New Zealand</div>
+
+              <div className="liquid-glass-soft rounded-[1.5rem] overflow-hidden">
+                <div className="relative h-44 sm:h-52 lg:h-64">
+                  <img
+                    src={viceCityArt}
+                    alt="Official GTA VI Vice City postcard artwork"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-white/70">Official artwork</p>
+                    <p className="mt-1 text-lg sm:text-xl font-semibold">Vice City, State of Leonida</p>
+                    <p className="mt-1 text-sm text-white/75">Rockstar Games media artwork</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -74,40 +90,41 @@ export default function Page() {
 
         <CountdownApp />
 
-        <footer className="mt-10 sm:mt-14 border-t border-white/10 pt-6 text-sm text-white/55">
+        <footer className="mt-6 sm:mt-8 liquid-glass-soft rounded-[1.75rem] p-5 sm:p-6">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div className="space-y-2 max-w-2xl">
+            <div className="max-w-2xl space-y-2 text-sm sm:text-base text-white/75">
               <p>
-                Built as a GTA VI fan countdown for{" "}
-                <span className="text-white/80">gta-6-countdown.supersoftware.agency</span>.
+                GTA VI fan countdown for{" "}
+                <span className="text-white font-medium">gta-6-countdown.supersoftware.agency</span>.
                 Not affiliated with Rockstar Games.
               </p>
               <p>
-                Source basis: Rockstar&apos;s announced 19 Nov 2026 release at midnight local time.
+                Timing basis: Rockstar&apos;s announced console release on 19 November 2026 at midnight local time in each region.
+                Images shown are official Rockstar Games GTA VI artwork/media assets.
               </p>
             </div>
-            <div className="grid sm:grid-cols-2 gap-4 lg:gap-6 text-sm">
-              <div className="panel rounded-xl p-4 border-white/10">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/45">Developer Contact</p>
+
+            <div className="grid sm:grid-cols-2 gap-3 lg:min-w-[460px]">
+              <div className="liquid-glass rounded-2xl p-4 sm:p-5">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">Developer Contact</p>
+                <p className="mt-2 text-base font-semibold text-white">Abdul Rehman</p>
                 <a
                   href="mailto:mail@abdulrehman.sbs"
-                  className="mt-2 inline-block text-white hover:text-fuchsia-200 transition-colors"
+                  className="mt-2 inline-block text-sm sm:text-base text-cyan-100 hover:text-white transition-colors break-all"
                 >
                   mail@abdulrehman.sbs
                 </a>
               </div>
-              <div className="panel rounded-xl p-4 border-white/10">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/45">
-                  Company / Agency
-                </p>
-                <p className="mt-2 text-white/90">SuperSoftware Agency</p>
+              <div className="liquid-glass rounded-2xl p-4 sm:p-5">
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">Company / Agency</p>
+                <p className="mt-2 text-base font-semibold text-white">SuperSoftware Agency</p>
                 <a
                   href="mailto:hello@supersoftware.agency"
-                  className="mt-1 inline-block text-white hover:text-cyan-200 transition-colors"
+                  className="mt-2 inline-block text-sm sm:text-base text-pink-100 hover:text-white transition-colors break-all"
                 >
                   hello@supersoftware.agency
                 </a>
-                <p className="mt-1 text-xs text-white/50">Software / web development</p>
+                <p className="mt-1 text-xs text-white/55">Web & software development</p>
               </div>
             </div>
           </div>

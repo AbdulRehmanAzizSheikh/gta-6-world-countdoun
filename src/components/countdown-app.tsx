@@ -93,14 +93,14 @@ function CountdownBlock({
   accent?: boolean;
 }) {
   return (
-    <div className="panel relative overflow-hidden rounded-2xl p-4 sm:p-5 text-center">
-      <div
-        className={`absolute inset-x-0 top-0 h-1 ${accent ? "sunset" : "bg-white/10"}`}
-      />
-      <div className="font-[family-name:var(--font-display)] text-5xl sm:text-6xl tracking-wide text-glow">
+    <div className="liquid-glass-soft rounded-[1.35rem] p-3 sm:p-4 text-center relative overflow-hidden">
+      {accent && (
+        <div className="absolute inset-x-4 top-2 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent opacity-70" />
+      )}
+      <div className="font-[family-name:var(--font-display)] text-4xl sm:text-5xl lg:text-6xl leading-none tracking-wide text-white drop-shadow-[0_2px_8px_rgba(255,255,255,0.12)]">
         {value}
       </div>
-      <div className="mt-1 text-[11px] sm:text-xs uppercase tracking-[0.28em] text-white/60">
+      <div className="mt-2 text-[10px] sm:text-[11px] uppercase tracking-[0.24em] text-white/65">
         {label}
       </div>
     </div>
@@ -111,10 +111,10 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
   const launchMs = useMemo(() => getLaunchUtcMs(country.timeZone), [country.timeZone]);
   const d = diffParts(launchMs - now);
   const localLaunch = formatInZone(launchMs, country.timeZone, {
-    weekday: "short",
+    weekday: "long",
     year: "numeric",
-    month: "short",
-    day: "2-digit",
+    month: "long",
+    day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
@@ -123,7 +123,7 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
   const localNow = formatInZone(now, country.timeZone, {
     weekday: "short",
     month: "short",
-    day: "2-digit",
+    day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -131,8 +131,8 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
   });
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+    <div className="space-y-4 sm:space-y-5">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <CountdownBlock label="Days" value={String(d.days)} accent />
         <CountdownBlock label="Hours" value={pad(d.hours)} />
         <CountdownBlock label="Minutes" value={pad(d.minutes)} />
@@ -140,35 +140,29 @@ function CountryFacts({ country, now }: { country: CountryOption; now: number })
       </div>
 
       {d.done ? (
-        <div className="panel rounded-2xl p-5 text-center border border-emerald-400/30">
-          <p className="text-lg sm:text-xl font-semibold text-emerald-300">
+        <div className="liquid-glass rounded-2xl p-5 text-center border border-emerald-300/30">
+          <p className="text-lg sm:text-xl font-semibold text-emerald-200">
             GTA VI is officially live in {country.name}.
           </p>
-          <p className="mt-1 text-sm text-white/70">
-            Local unlock time: {localLaunch}
-          </p>
+          <p className="mt-1 text-sm text-white/75">Local unlock time: {localLaunch}</p>
         </div>
       ) : (
-        <div className="panel rounded-2xl p-5 sm:p-6">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+        <div className="liquid-glass rounded-2xl p-4 sm:p-5">
+          <div className="grid sm:grid-cols-[1fr_auto] gap-4 sm:gap-6">
             <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-white/50">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">
                 Official launch in {country.name}
               </p>
-              <p className="mt-1 text-lg sm:text-xl font-semibold text-white">
+              <p className="mt-2 text-base sm:text-lg font-semibold leading-snug text-white">
                 {localLaunch}
               </p>
-              <p className="mt-1 text-sm text-white/65">
-                Based on Rockstar&apos;s midnight local-time release on 19 Nov 2026.
+              <p className="mt-2 text-sm text-white/65">
+                Rockstar&apos;s announced release: midnight local time, 19 Nov 2026.
               </p>
             </div>
-            <div className="sm:text-right">
-              <p className="text-xs uppercase tracking-[0.22em] text-white/50">
-                Current time there
-              </p>
-              <p className="mt-1 font-mono text-base sm:text-lg text-cyan-200">
-                {localNow}
-              </p>
+            <div className="sm:text-right sm:min-w-[190px] sm:pl-4 sm:border-l border-white/10">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">Current time there</p>
+              <p className="mt-2 font-mono text-sm sm:text-base text-cyan-100">{localNow}</p>
             </div>
           </div>
         </div>
@@ -203,9 +197,9 @@ export default function CountdownApp() {
   const refDiff = diffParts(referenceLaunchMs - now);
 
   const nzLocalLaunch = formatInZone(referenceLaunchMs, reference.timeZone, {
-    weekday: "short",
-    month: "short",
-    day: "2-digit",
+    weekday: "long",
+    month: "long",
+    day: "numeric",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
@@ -215,7 +209,7 @@ export default function CountdownApp() {
   const selectedLocalLaunchShort = formatInZone(selectedLaunchMs, selected.timeZone, {
     weekday: "short",
     month: "short",
-    day: "2-digit",
+    day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
@@ -227,116 +221,123 @@ export default function CountdownApp() {
 
   return (
     <div className="relative">
-      <section className="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 lg:gap-8 items-start">
+      <section className="grid lg:grid-cols-[1.2fr_0.8fr] gap-5 lg:gap-6 items-start">
         <div className="space-y-5">
-          <div className="panel rounded-3xl p-5 sm:p-7 relative overflow-hidden">
-            <div className="absolute -top-20 -right-16 h-56 w-56 rounded-full bg-fuchsia-500/20 blur-3xl" />
-            <div className="absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-cyan-400/15 blur-3xl" />
-            <div className="relative">
-              <div className="flex flex-wrap items-center gap-2 mb-4">
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs tracking-wide text-white/80">
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                  Official local-time release tracking
-                </span>
-                <span className="inline-flex items-center rounded-full border border-fuchsia-400/30 bg-fuchsia-500/10 px-3 py-1 text-xs text-fuchsia-100">
-                  Default: Pakistan
-                </span>
-              </div>
+          <div className="liquid-glass rounded-[1.75rem] p-5 sm:p-6 lg:p-7">
+            <div className="flex flex-wrap items-center gap-2 mb-5">
+              <span className="liquid-chip inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs text-emerald-100">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                Live official local-time countdown
+              </span>
+              <span className="liquid-chip inline-flex items-center rounded-full px-3 py-1.5 text-xs text-white/85">
+                Default: Pakistan 🇵🇰
+              </span>
+              <span className="liquid-chip inline-flex items-center rounded-full px-3 py-1.5 text-xs text-white/85">
+                First launch: New Zealand 🇳🇿
+              </span>
+            </div>
 
-              <label className="block text-sm text-white/70 mb-2" htmlFor="country">
-                Select country / region
-              </label>
-              <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-                <select
-                  id="country"
-                  value={selectedCode}
-                  onChange={(e) => setSelectedCode(e.target.value)}
-                  className="w-full sm:max-w-md rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-base text-white outline-none ring-0 focus:border-fuchsia-400/60 focus:bg-black/55"
-                >
-                  {COUNTRIES.map((c) => (
-                    <option key={c.code} value={c.code} className="bg-[#120b1d]">
-                      {c.flag} {c.name}
-                      {c.code === REFERENCE_COUNTRY_CODE ? " — First launch" : ""}
-                    </option>
-                  ))}
-                </select>
-                <div className="text-sm text-white/60">
-                  Showing official launch countdown for <span className="text-white font-medium">{selected.flag} {selected.name}</span>
+            <div className="grid gap-4">
+              <div>
+                <label className="block text-sm font-medium text-white/85 mb-2" htmlFor="country">
+                  Select your country / region
+                </label>
+                <div className="flex flex-col md:flex-row gap-3 md:items-center">
+                  <select
+                    id="country"
+                    value={selectedCode}
+                    onChange={(e) => setSelectedCode(e.target.value)}
+                    className="w-full md:max-w-xl rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm sm:text-base text-white outline-none shadow-[inset_0_1px_0_rgba(255,255,255,0.25)] backdrop-blur-xl focus:border-white/35 focus:bg-white/15"
+                  >
+                    {COUNTRIES.map((c) => (
+                      <option key={c.code} value={c.code} className="bg-[#111523] text-white">
+                        {c.flag} {c.name}
+                        {c.code === REFERENCE_COUNTRY_CODE ? " — First launch" : ""}
+                        {c.code === DEFAULT_COUNTRY_CODE ? " — Default" : ""}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="text-sm text-white/65">
+                    Selected: <span className="text-white font-medium">{selected.flag} {selected.name}</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-6">
-                <CountryFacts country={selected} now={now} />
-              </div>
+              <CountryFacts country={selected} now={now} />
             </div>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
-            <div className="panel rounded-2xl p-5">
-              <p className="text-xs uppercase tracking-[0.22em] text-white/50">Selected country</p>
-              <p className="mt-2 text-xl font-semibold">{selected.flag} {selected.name}</p>
-              <p className="mt-2 text-sm text-white/70">
-                Official local launch: <span className="text-white">{selectedLocalLaunchShort}</span>
+            <div className="liquid-glass-soft rounded-2xl p-5">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">Selected country launch</p>
+              <p className="mt-2 text-lg font-semibold text-white">{selected.flag} {selected.name}</p>
+              <p className="mt-3 text-sm text-white/70 leading-relaxed">
+                Official local launch: <span className="text-white font-medium">{selectedLocalLaunchShort}</span>
               </p>
-              <p className="mt-2 text-sm text-cyan-200/90">
+              <p className="mt-3 text-sm text-cyan-100/90 leading-relaxed">
                 {hoursDiff === 0
-                  ? "Launches at the same moment as New Zealand's local midnight window? (same region time)."
+                  ? "This region aligns with the New Zealand reference in this comparison."
                   : hoursDiff > 0
-                    ? `Launches ${hoursDiff} hours after New Zealand's first local midnight launch.`
-                    : `Launches ${Math.abs(hoursDiff)} hours before this reference in absolute time.`}
+                    ? `This is about ${hoursDiff} hours after New Zealand's first local midnight launch.`
+                    : `This is about ${Math.abs(hoursDiff)} hours before New Zealand in absolute time.`}
               </p>
             </div>
-            <div className="panel rounded-2xl p-5">
-              <p className="text-xs uppercase tracking-[0.22em] text-white/50">How this countdown works</p>
-              <ul className="mt-3 space-y-2 text-sm text-white/75 leading-relaxed">
-                <li>• GTA VI console release is set for <span className="text-white">19 November 2026</span>.</li>
-                <li>• Rockstar states release at <span className="text-white">midnight local time</span> in all regions.</li>
-                <li>• <span className="text-white">New Zealand</span> reaches local midnight first, so it gets the earliest launch.</li>
+            <div className="liquid-glass-soft rounded-2xl p-5">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/55">Important</p>
+              <ul className="mt-3 space-y-2.5 text-sm text-white/72 leading-relaxed">
+                <li>• GTA VI console release date: <span className="text-white">19 November 2026</span>.</li>
+                <li>• Rockstar&apos;s stated rollout: <span className="text-white">midnight local time</span> in each region.</li>
+                <li>• <span className="text-white">New Zealand</span> reaches local midnight first, so it gets the earliest official launch.</li>
               </ul>
             </div>
           </div>
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-6">
-          <div className="panel rounded-3xl p-5 sm:p-6 border-fuchsia-400/20 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_right,rgba(255,79,216,0.5),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(53,231,255,0.35),transparent_45%)]" />
-            <div className="relative">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.22em] text-fuchsia-200/80">
-                    From / First launch reference
-                  </p>
-                  <h2 className="mt-1 text-2xl sm:text-3xl font-semibold">
-                    {reference.flag} {reference.name}
-                  </h2>
+          <div className="liquid-glass rounded-[1.75rem] p-5 sm:p-6 border-white/25">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-fuchsia-200/80">
+                  From / First launch reference
+                </p>
+                <h2 className="mt-1 text-2xl font-semibold text-white">
+                  {reference.flag} {reference.name}
+                </h2>
+              </div>
+              <span className="liquid-chip rounded-full px-2.5 py-1 text-xs text-emerald-100">
+                Earliest
+              </span>
+            </div>
+            <p className="mt-3 text-sm text-white/70 leading-relaxed">
+              New Zealand is the first in the world to hit GTA VI launch at local midnight.
+            </p>
+
+            <div className="mt-4 grid grid-cols-4 gap-2">
+              {[
+                { l: "Days", v: String(refDiff.days) },
+                { l: "Hrs", v: pad(refDiff.hours) },
+                { l: "Min", v: pad(refDiff.minutes) },
+                { l: "Sec", v: pad(refDiff.seconds) },
+              ].map((x) => (
+                <div key={x.l} className="rounded-2xl bg-white/10 border border-white/15 p-2.5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                  <div className="font-[family-name:var(--font-display)] text-2xl leading-none text-white">{x.v}</div>
+                  <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/60">{x.l}</div>
                 </div>
-                <span className="rounded-full bg-emerald-400/15 border border-emerald-300/30 px-3 py-1 text-xs text-emerald-200">
-                  Earliest
-                </span>
+              ))}
+            </div>
+
+            <div className="mt-4 space-y-3 rounded-2xl bg-white/8 border border-white/12 p-4 text-sm">
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-white/55">NZ local launch</div>
+                <div className="mt-1 text-white font-medium leading-snug">{nzLocalLaunch}</div>
               </div>
-              <p className="mt-3 text-sm text-white/75">
-                New Zealand hits midnight local time first, so this is the world&apos;s earliest official GTA VI launch moment.
-              </p>
-              <div className="mt-4 grid grid-cols-4 gap-2">
-                {[
-                  { l: "D", v: String(refDiff.days) },
-                  { l: "H", v: pad(refDiff.hours) },
-                  { l: "M", v: pad(refDiff.minutes) },
-                  { l: "S", v: pad(refDiff.seconds) },
-                ].map((x) => (
-                  <div key={x.l} className="rounded-xl bg-black/30 border border-white/10 p-2 text-center">
-                    <div className="font-[family-name:var(--font-display)] text-2xl sm:text-3xl">{x.v}</div>
-                    <div className="text-[10px] tracking-[0.2em] text-white/50">{x.l}</div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 rounded-xl bg-black/25 border border-white/10 p-3 text-sm">
-                <div className="text-white/50 text-xs uppercase tracking-[0.18em]">NZ local launch</div>
-                <div className="mt-1 text-white font-medium">{nzLocalLaunch}</div>
-                <div className="mt-2 text-white/50 text-xs uppercase tracking-[0.18em]">Time right now in NZ</div>
-                <div className="mt-1 font-mono text-cyan-200">
+              <div className="border-t border-white/10 pt-3">
+                <div className="text-[11px] uppercase tracking-[0.18em] text-white/55">Current time in NZ</div>
+                <div className="mt-1 font-mono text-cyan-100">
                   {formatInZone(now, reference.timeZone, {
                     weekday: "short",
+                    month: "short",
+                    day: "2-digit",
                     hour: "2-digit",
                     minute: "2-digit",
                     second: "2-digit",
@@ -344,21 +345,21 @@ export default function CountdownApp() {
                   })}
                 </div>
               </div>
-              {refDiff.done && (
-                <p className="mt-3 text-emerald-300 font-semibold">New Zealand launch moment has arrived.</p>
-              )}
             </div>
+            {refDiff.done && (
+              <p className="mt-3 text-sm text-emerald-300 font-semibold">New Zealand launch moment has arrived.</p>
+            )}
           </div>
 
-          <div className="panel rounded-2xl p-5">
-            <p className="text-xs uppercase tracking-[0.22em] text-white/50">Quick compare</p>
+          <div className="liquid-glass-soft rounded-2xl p-5">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-white/45">Quick compare</p>
             <div className="mt-3 space-y-3 text-sm">
               <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
-                <span className="text-white/70">Pakistan (default)</span>
-                <span className="text-right font-medium">
+                <span className="text-white/70">🇵🇰 Pakistan (default)</span>
+                <span className="text-right font-medium text-white/95">
                   {formatInZone(getLaunchUtcMs("Asia/Karachi"), "Asia/Karachi", {
                     month: "short",
-                    day: "2-digit",
+                    day: "numeric",
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: true,
@@ -366,11 +367,11 @@ export default function CountdownApp() {
                 </span>
               </div>
               <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
-                <span className="text-white/70">New Zealand (first)</span>
-                <span className="text-right font-medium">
+                <span className="text-white/70">🇳🇿 New Zealand (first)</span>
+                <span className="text-right font-medium text-white/95">
                   {formatInZone(referenceLaunchMs, reference.timeZone, {
                     month: "short",
-                    day: "2-digit",
+                    day: "numeric",
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: true,
@@ -378,11 +379,11 @@ export default function CountdownApp() {
                 </span>
               </div>
               <div className="flex items-start justify-between gap-4">
-                <span className="text-white/70">Your selected: {selected.name}</span>
+                <span className="text-white/70">{selected.flag} {selected.name}</span>
                 <span className="text-right font-medium text-fuchsia-100">
                   {formatInZone(selectedLaunchMs, selected.timeZone, {
                     month: "short",
-                    day: "2-digit",
+                    day: "numeric",
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: true,
@@ -391,7 +392,7 @@ export default function CountdownApp() {
               </div>
             </div>
             <p className="mt-4 text-xs text-white/45 leading-relaxed">
-              Times shown as each region&apos;s local clock at unlock (midnight local, 19 Nov 2026). Store/platform rollout details can vary; always check your console store.
+              Each region shown at its own local midnight unlock (19 Nov 2026). Platform/store timing can vary slightly.
             </p>
           </div>
         </aside>

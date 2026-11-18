@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "commons.wikimedia.org" },
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "media-rockstargames-com.akamaized.net" },
+      { protocol: "https", hostname: "www.rockstargames.com" },
     ],
   },
 };
