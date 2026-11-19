@@ -1,54 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { COUNTRIES, REFERENCE_COUNTRY_CODE } from "@/lib/countries";
-
-const LAUNCH = { year: 2026, month: 10, day: 19, hour: 0, minute: 0 }; // month 0-indexed (Nov)
-
-function zonedWallTimeToUtcMs(
-  year: number,
-  monthIndex: number,
-  day: number,
-  hour: number,
-  minute: number,
-  timeZone: string,
-) {
-  let guess = Date.UTC(year, monthIndex, day, hour, minute, 0);
-  for (let i = 0; i < 4; i++) {
-    const dtf = new Intl.DateTimeFormat("en-US", {
-      timeZone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-    const parts = dtf.formatToParts(new Date(guess));
-    const map: Record<string, string> = {};
-    for (const p of parts) if (p.type !== "literal") map[p.type] = p.value;
-    let h = Number(map.hour);
-    if (h === 24) h = 0;
-    const asUtc = Date.UTC(
-      Number(map.year),
-      Number(map.month) - 1,
-      Number(map.day),
-      h,
-      Number(map.minute),
-      Number(map.second),
-    );
-    const want = Date.UTC(year, monthIndex, day, hour, minute, 0);
-    const diff = want - asUtc;
-    guess += diff;
-    if (diff === 0) break;
-  }
-  return guess;
-}
-
-function getLaunchUtcMs(timeZone: string) {
-  return zonedWallTimeToUtcMs(LAUNCH.year, LAUNCH.month, LAUNCH.day, LAUNCH.hour, LAUNCH.minute, timeZone);
-}
+import { COUNTRIES } from "@/lib/countries";
+import { getLaunchUtcMs, getNextLaunchCountryCode } from "@/lib/launch-time";
 
 type Particle = {
   x: number;
@@ -75,61 +29,83 @@ type Rocket = {
 
 const COLORS = ["#ff4fd8", "#ffd166", "#7cf7ff", "#a78bfa", "#34d399", "#fb7185", "#60a5fa", "#f97316"];
 
+function dismissKey(code: string) {
+  return `gta6_launch_dismissed_${code}`;
+}
+
+function getSelectedCountryCode() {
+  if (typeof window === "undefined") return getNextLaunchCountryCode();
+  const saved = localStorage.getItem("gta6_country");
+  if (saved && COUNTRIES.some((c) => c.code === saved)) return saved;
+  return getNextLaunchCountryCode();
+}
+
 export default function LaunchFireworks() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [countryCode, setCountryCode] = useState<string>(() => getSelectedCountryCode());
   const [launched, setLaunched] = useState(false);
   const [showOverlay, setShowOverlay] = useState(false);
   const [testMode, setTestMode] = useState(false);
-  const [dismissed, setDismissed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return localStorage.getItem("gta6_launch_nz_dismissed") === "1";
-    } catch {
-      return false;
-    }
-  });
 
-  const nz = useMemo(
-    () => COUNTRIES.find((c) => c.code === REFERENCE_COUNTRY_CODE) ?? COUNTRIES[0],
-    [],
+  const country = useMemo(
+    () => COUNTRIES.find((c) => c.code === countryCode) ?? COUNTRIES[0],
+    [countryCode],
   );
-  // Launch celebration at NZ midnight (first official launch)
-  const launchMs = useMemo(() => getLaunchUtcMs(nz.timeZone), [nz.timeZone]);
+  const launchMs = useMemo(() => getLaunchUtcMs(country.timeZone), [country.timeZone]);
 
+  // Track selected country (main countdown selection) and test mode
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("testLaunch") === "1") setTestMode(true);
-    }
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("testLaunch") === "1") setTestMode(true);
+
+    const sync = () => {
+      const code = getSelectedCountryCode();
+      setCountryCode((prev) => (prev === code ? prev : code));
+    };
+    sync();
+    const id = setInterval(sync, 1000);
+    window.addEventListener("storage", sync);
+    return () => {
+      clearInterval(id);
+      window.removeEventListener("storage", sync);
+    };
   }, []);
 
+  // Check launch for currently selected country (per-country dismissal)
   useEffect(() => {
-    if (dismissed) {
-      setShowOverlay(false);
-      return;
-    }
     function isDismissedNow() {
       try {
-        return localStorage.getItem("gta6_launch_nz_dismissed") === "1";
+        return localStorage.getItem(dismissKey(country.code)) === "1";
       } catch {
         return false;
       }
     }
+
     function check() {
-      if (dismissed || isDismissedNow()) return;
+      if (isDismissedNow()) {
+        setShowOverlay(false);
+        return;
+      }
       const now = Date.now();
       if (testMode || now >= launchMs) {
         setLaunched(true);
         setShowOverlay(true);
+      } else {
+        setShowOverlay(false);
       }
     }
+
+    // reset launch flag when country changes; overlay decided by check
+    setLaunched(false);
+    setShowOverlay(false);
     check();
     const id = setInterval(check, 1000);
     return () => clearInterval(id);
-  }, [launchMs, testMode, dismissed]);
+  }, [country.code, launchMs, testMode]);
 
   useEffect(() => {
-    if (!launched) return;
+    if (!launched || !showOverlay) return;
     const canvasEl = canvasRef.current;
     if (!canvasEl) return;
     const ctx2d = canvasEl.getContext("2d");
@@ -191,7 +167,6 @@ export default function LaunchFireworks() {
           fade: 0.012 + Math.random() * 0.01,
         });
       }
-      // secondary sparkle ring sometimes
       if (Math.random() > 0.5) {
         const c2 = COLORS[Math.floor(Math.random() * COLORS.length)];
         for (let i = 0; i < 24; i++) {
@@ -230,8 +205,7 @@ export default function LaunchFireworks() {
         const r = rockets[i];
         r.x += r.vx;
         r.y += r.vy;
-        r.vy += 0.03; // slight gravity
-        // trail
+        r.vy += 0.03;
         ctx.fillStyle = r.color;
         ctx.beginPath();
         ctx.arc(r.x, r.y, 2, 0, Math.PI * 2);
@@ -273,7 +247,7 @@ export default function LaunchFireworks() {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
-  }, [launched]);
+  }, [launched, showOverlay, country.code]);
 
   if (!showOverlay) return null;
 
@@ -282,24 +256,24 @@ export default function LaunchFireworks() {
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
       <div className="absolute inset-x-0 top-0 flex justify-center pt-6 sm:pt-10 px-4 pointer-events-none">
         <div className="pointer-events-auto liquid-glass rounded-3xl px-5 sm:px-8 py-4 sm:py-5 text-center border border-fuchsia-300/30 shadow-[0_0_60px_rgba(236,72,153,0.25)]">
-          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] text-fuchsia-200/90">First in the world</p>
+          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] text-fuchsia-200/90">Launch celebration</p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold accent-text">GTA 6 IS LIVE! 🎆</h2>
             <div className="inline-flex items-center gap-2 rounded-2xl border border-fuchsia-300/40 bg-fuchsia-500/20 px-4 py-2 text-base sm:text-xl font-bold text-white shadow-[0_0_20px_rgba(236,72,153,0.25)]">
-              <span className="text-xl sm:text-2xl">{nz.flag}</span>
-              <span>{nz.name}</span>
+              <span className="text-xl sm:text-2xl">{country.flag}</span>
+              <span>{country.name}</span>
             </div>
           </div>
           <p className="mt-3 text-sm sm:text-base text-white/90">
-            Grand Theft Auto VI has officially launched in {nz.flag} <span className="font-semibold text-white">{nz.name}</span> — the first country to hit midnight on 19 November 2026.
+            Grand Theft Auto VI has officially launched in {country.flag}{" "}
+            <span className="font-semibold text-white">{country.name}</span> (midnight local time).
           </p>
           <button
             type="button"
             onClick={() => {
               setShowOverlay(false);
-              setDismissed(true);
               try {
-                localStorage.setItem("gta6_launch_nz_dismissed", "1");
+                localStorage.setItem(dismissKey(country.code), "1");
               } catch {}
             }}
             className="mt-3 inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs sm:text-sm text-white/90 hover:bg-white/20 transition-colors"

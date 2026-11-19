@@ -7,60 +7,7 @@ import {
   REFERENCE_COUNTRY_CODE,
   type CountryOption,
 } from "@/lib/countries";
-
-const LAUNCH = { year: 2026, month: 10, day: 19, hour: 0, minute: 0 }; // month 0-indexed (Nov)
-
-function zonedWallTimeToUtcMs(
-  year: number,
-  monthIndex: number,
-  day: number,
-  hour: number,
-  minute: number,
-  timeZone: string,
-) {
-  let guess = Date.UTC(year, monthIndex, day, hour, minute, 0);
-  for (let i = 0; i < 4; i++) {
-    const dtf = new Intl.DateTimeFormat("en-US", {
-      timeZone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-    const parts = dtf.formatToParts(new Date(guess));
-    const map: Record<string, string> = {};
-    for (const p of parts) if (p.type !== "literal") map[p.type] = p.value;
-    let h = Number(map.hour);
-    if (h === 24) h = 0;
-    const asUtc = Date.UTC(
-      Number(map.year),
-      Number(map.month) - 1,
-      Number(map.day),
-      h,
-      Number(map.minute),
-      Number(map.second),
-    );
-    const want = Date.UTC(year, monthIndex, day, hour, minute, 0);
-    const diff = want - asUtc;
-    guess += diff;
-    if (diff === 0) break;
-  }
-  return guess;
-}
-
-function getLaunchUtcMs(timeZone: string) {
-  return zonedWallTimeToUtcMs(
-    LAUNCH.year,
-    LAUNCH.month,
-    LAUNCH.day,
-    LAUNCH.hour,
-    LAUNCH.minute,
-    timeZone,
-  );
-}
+import { getLaunchUtcMs, getNextLaunchCountryCode } from "@/lib/launch-time";
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
@@ -190,11 +137,19 @@ export default function CountdownApp() {
     return () => clearInterval(id);
   }, []);
 
-  // Restore last selected country / compare country
+  // Restore last selected country / compare country (default: next country launching soon)
   useEffect(() => {
     const c = localStorage.getItem("gta6_country");
     const cmp = localStorage.getItem("gta6_compare");
-    if (c && COUNTRIES.some((x) => x.code === c)) setSelectedCode(c);
+    if (c && COUNTRIES.some((x) => x.code === c)) {
+      setSelectedCode(c);
+    } else {
+      const next = getNextLaunchCountryCode();
+      if (next && COUNTRIES.some((x) => x.code === next)) {
+        setSelectedCode(next);
+        localStorage.setItem("gta6_country", next);
+      }
+    }
     if (cmp && COUNTRIES.some((x) => x.code === cmp)) setCompareCode(cmp);
   }, []);
 

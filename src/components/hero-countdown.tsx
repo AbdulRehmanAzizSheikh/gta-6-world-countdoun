@@ -2,53 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { COUNTRIES, REFERENCE_COUNTRY_CODE, DEFAULT_COUNTRY_CODE } from "@/lib/countries";
-
-const LAUNCH = { year: 2026, month: 10, day: 19, hour: 0, minute: 0 }; // month 0-indexed (Nov)
-
-function zonedWallTimeToUtcMs(
-  year: number,
-  monthIndex: number,
-  day: number,
-  hour: number,
-  minute: number,
-  timeZone: string,
-) {
-  let guess = Date.UTC(year, monthIndex, day, hour, minute, 0);
-  for (let i = 0; i < 4; i++) {
-    const dtf = new Intl.DateTimeFormat("en-US", {
-      timeZone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-    const parts = dtf.formatToParts(new Date(guess));
-    const map: Record<string, string> = {};
-    for (const p of parts) if (p.type !== "literal") map[p.type] = p.value;
-    let h = Number(map.hour);
-    if (h === 24) h = 0;
-    const asUtc = Date.UTC(
-      Number(map.year),
-      Number(map.month) - 1,
-      Number(map.day),
-      h,
-      Number(map.minute),
-      Number(map.second),
-    );
-    const want = Date.UTC(year, monthIndex, day, hour, minute, 0);
-    const diff = want - asUtc;
-    guess += diff;
-    if (diff === 0) break;
-  }
-  return guess;
-}
-
-function getLaunchUtcMs(timeZone: string) {
-  return zonedWallTimeToUtcMs(LAUNCH.year, LAUNCH.month, LAUNCH.day, LAUNCH.hour, LAUNCH.minute, timeZone);
-}
+import { getLaunchUtcMs, getNextLaunchCountryCode } from "@/lib/launch-time";
 
 export default function HeroCountdown() {
   const [selectedCode, setSelectedCode] = useState(REFERENCE_COUNTRY_CODE);
@@ -60,10 +14,18 @@ export default function HeroCountdown() {
     return () => clearInterval(id);
   }, []);
 
-  // Restore last hero selection
+  // Restore last hero selection (default: next country launching soon)
   useEffect(() => {
     const c = localStorage.getItem("gta6_hero_country");
-    if (c && COUNTRIES.some((x) => x.code === c)) setSelectedCode(c);
+    if (c && COUNTRIES.some((x) => x.code === c)) {
+      setSelectedCode(c);
+    } else {
+      const next = getNextLaunchCountryCode();
+      if (next && COUNTRIES.some((x) => x.code === next)) {
+        setSelectedCode(next);
+        localStorage.setItem("gta6_hero_country", next);
+      }
+    }
   }, []);
 
   function changeCountry(code: string) {
